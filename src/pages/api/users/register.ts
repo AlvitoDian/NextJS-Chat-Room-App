@@ -30,12 +30,11 @@ export default async function handler(
         username,
         email,
         password: hashedPassword,
+        roles: "USER",
       });
 
       //? Save User
       const savedUser = await newUser.save();
-
-      console.log(username, email, password);
 
       return res.status(200).json({
         message: "User created successfully",

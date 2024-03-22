@@ -18,6 +18,12 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Must provide a password"],
     },
+    profileImage: {
+      type: String,
+    },
+    roles: {
+      type: String,
+    },
   },
   {
     timestamps: true,

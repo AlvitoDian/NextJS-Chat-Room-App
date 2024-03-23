@@ -39,7 +39,10 @@ export default function Admin() {
         setField({
           name: "",
         });
-        router.push("/admin");
+        console.log(response);
+
+        setRooms((prevState) => [...prevState, response.data.savedRoom]);
+
         console.log(field);
       } else {
         const errorMessage = response.data.message;

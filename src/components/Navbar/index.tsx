@@ -11,7 +11,7 @@ export default function Navbar({ session }) {
       {/* Logo */}
       <div>
         <Link href="/" className="text-xl font-bold">
-          Logo
+          Nimbrunk
         </Link>
       </div>
       {/* Menu */}

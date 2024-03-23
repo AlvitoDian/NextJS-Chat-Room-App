@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
 import { signIn } from "next-auth/react";
-import { redirect } from "next/dist/server/api-utils";
 
 export default function Login() {
   const router = useRouter();
+
   const [user, setUser] = useState({
     email: "",
     password: "",

@@ -58,7 +58,7 @@ export const authOptions = {
       if (token) {
         session.user.username = token.username;
         session.user.email = token.email;
-        session.userId = token.id;
+        session.user.id = token.id;
         session.user.roles = token.roles;
       }
       console.log("This session : ", session);

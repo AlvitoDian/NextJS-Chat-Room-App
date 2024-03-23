@@ -8,7 +8,7 @@ const roomSchema = new Schema(
       type: String,
       required: [true, "Must provide a username"],
     },
-    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
+    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     roomImage: {
       type: String,
       required: false,
@@ -19,6 +19,6 @@ const roomSchema = new Schema(
   }
 );
 
-const Room = mongoose.models.rooms || mongoose.model("rooms", roomSchema);
+const Room = mongoose.models.Room || mongoose.model("Room", roomSchema);
 
 export default Room;

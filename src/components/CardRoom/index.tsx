@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function CardRoom({ key, name, id }) {
   return (
-    <Link href={`/chatroom/${id}`}>
+    <Link href={`/chat-room/${id}`}>
       <div className="max-w-sm rounded overflow-hidden shadow-lg">
         <img
           className="w-full"

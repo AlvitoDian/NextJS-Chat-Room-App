@@ -25,7 +25,7 @@ export default function Navbar({ session }) {
               {session.user.roles.includes("ADMIN") && (
                 <li>
                   <Link href="/admin" className="hover:text-gray-300">
-                    Admin
+                    Admin Page
                   </Link>
                 </li>
               )}

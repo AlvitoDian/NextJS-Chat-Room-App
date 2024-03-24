@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function CardRoom({ key, name, id }) {
+export default function CardRoom({ name, id }) {
   return (
     <Link href={`/chat-room/${id}`}>
       <div className="max-w-sm rounded overflow-hidden shadow-lg">

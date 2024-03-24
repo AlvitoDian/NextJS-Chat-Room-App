@@ -35,8 +35,8 @@ export default function Home() {
           {isLoading ? (
             <div>Loading...</div>
           ) : (
-            rooms.map((room) => (
-              <CardRoom key={room._id} name={room.name} id={room._id} />
+            rooms.map((room, index) => (
+              <CardRoom key={index} name={room.name} id={room._id} />
             ))
           )}
         </div>

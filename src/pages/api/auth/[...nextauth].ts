@@ -52,7 +52,7 @@ export const authOptions = {
         token.id = user.id;
         token.roles = user.roles;
       }
-      console.log("This token : ", token);
+      /*   console.log("This token : ", token); */
       return token;
     },
     async session({ session, token }) {
@@ -62,7 +62,7 @@ export const authOptions = {
         session.user.id = token.id;
         session.user.roles = token.roles;
       }
-      console.log("This session : ", session);
+      /*    console.log("This session : ", session); */
       return session;
     },
   },

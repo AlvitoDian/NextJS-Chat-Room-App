@@ -1,4 +1,14 @@
-export default function BubbleChat({ key, name, id, message, isSender, time }) {
+import React, { useEffect, useRef } from "react";
+
+export default function BubbleChat({ name, id, message, isSender, time }) {
+  const bubbleRef = useRef(null);
+
+  useEffect(() => {
+    if (bubbleRef.current) {
+      bubbleRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, []);
+
   function isoToTime(isoString) {
     const date = new Date(isoString);
     const currentDate = new Date();
@@ -17,6 +27,7 @@ export default function BubbleChat({ key, name, id, message, isSender, time }) {
 
   return (
     <div
+      ref={bubbleRef}
       className={`py-2 flex items-start gap-2.5 ${
         isSender ? "flex-row-reverse" : ""
       }`}

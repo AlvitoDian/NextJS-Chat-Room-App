@@ -5,8 +5,10 @@ import Link from "next/link";
 import BubbleChat from "@/components/BubbleChat";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
+import io from "socket.io-client";
 
 export default function ChatRoom() {
+  let socket = io();
   const router = useRouter();
   const { id } = router.query;
   const { data: session, status } = useSession() as any;
@@ -14,7 +16,9 @@ export default function ChatRoom() {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [socketConnected, setSocketConnected] = useState(false);
 
+  //? Fetch room details on page load
   useEffect(() => {
     if (id === undefined) {
       router.push("/404");
@@ -26,7 +30,6 @@ export default function ChatRoom() {
       .get(`/api/chatRoom/${id}`)
       .then((response) => {
         const data = response.data;
-        console.log("Data", data);
         if (data.success) {
           setRoom(data.room);
         } else {
@@ -43,15 +46,27 @@ export default function ChatRoom() {
 
   useEffect(() => {
     fetchMessages();
-  }, []);
-  console.log(room);
+    if (!socketConnected) {
+      connectSocketio();
+      setSocketConnected(true);
+    }
+  }, [socketConnected]);
 
+  //? Connect Socket io
+  const connectSocketio = async () => {
+    await fetch("/api/socket");
+
+    socket.on("receive-message", (data) => {
+      setMessages((pre) => [...pre, data]);
+    });
+  };
+
+  //? Fetch Message Function
   const fetchMessages = async () => {
     try {
       setIsLoading(true);
       const response = await axios.get(`/api/message/getAllMessage/${id}`);
       const data = response.data;
-      console.log("Message", data);
       if (data.success) {
         setMessages(data.messages);
       } else {
@@ -64,6 +79,7 @@ export default function ChatRoom() {
     }
   };
 
+  //? Function Send Message
   const sendMessage = async () => {
     if (message.trim() === "") {
       return;
@@ -80,7 +96,11 @@ export default function ChatRoom() {
       const data = response.data;
       console.log("Send Message Response", data);
       if (data.success) {
-        console.log(data);
+        console.log("After Send", data.savedMessage);
+        let sendSocket = data.savedMessage;
+        socket.emit("send-message", {
+          sendSocket,
+        });
       } else {
         console.error("Error sending message:", data.error);
       }
@@ -89,12 +109,15 @@ export default function ChatRoom() {
     }
 
     setMessage("");
+    console.log("All Messages", messages);
   };
 
+  //? Loading Screen
   if (isLoading) {
     return <p>Loading...</p>;
   }
 
+  //? Room Not Found Screen
   if (!room) {
     return (
       <>
@@ -117,10 +140,10 @@ export default function ChatRoom() {
             </div>
             <div className="flex flex-col px-5">
               <div className="flex flex-col -ml-5 px-5 w-70 h-[65vh] absolute bottom-0 mb-20 overflow-auto w-full">
-                {messages.map((message) => (
+                {messages.map((message, index) => (
                   <BubbleChat
-                    key={message.key}
-                    id={message.id}
+                    key={index}
+                    id={message._id}
                     name={message.user.username}
                     message={message.text}
                     time={message.createdAt}

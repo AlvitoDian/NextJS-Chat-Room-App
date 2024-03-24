@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Message from "@/models/Message";
+import User from "@/models/User";
 import { connectDB } from "@/utils/connectDB";
 
 export default async function handler(
@@ -15,6 +16,10 @@ export default async function handler(
       const message = new Message({ text, user: userId, room: roomId });
 
       const savedMessage = await message.save();
+
+      const userFind = await User.findById(userId).select("-password -roles");
+
+      savedMessage.user = userFind;
 
       return res.status(200).json({
         message: "Message sent successfully",

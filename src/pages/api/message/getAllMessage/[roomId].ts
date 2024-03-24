@@ -15,7 +15,9 @@ export default async function handler(
       const { roomId } = req.query;
 
       // Mencari semua pesan berdasarkan roomId
-      const messages = await Message.find({ room: roomId }).populate("user");
+      const messages = await Message.find({
+        room: roomId,
+      }).populate("user");
 
       return res.status(200).json({
         success: true,

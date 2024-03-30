@@ -1,5 +1,6 @@
 import Head from "next/head";
 import CardRoom from "@/components/CardRoom";
+import Hero from "@/components/Hero";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -30,6 +31,7 @@ export default function Home() {
       <Head>
         <title>Home</title>
       </Head>
+      <Hero />
       <div className="px-10 py-10">
         <div className="flex gap-[12px] justify-center">
           {isLoading ? (

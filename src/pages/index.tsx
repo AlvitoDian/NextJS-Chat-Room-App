@@ -33,6 +33,9 @@ export default function Home() {
       </Head>
       <Hero />
       <div className="px-10 py-10">
+        <h2 className="text-center py-10 font-bold text-2xl text-gray-700">
+          Segera gabung obrolan
+        </h2>
         <div className="flex gap-[12px] justify-center">
           {isLoading ? (
             <div>Loading...</div>

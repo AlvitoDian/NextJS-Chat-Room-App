@@ -36,7 +36,7 @@ export default function Home() {
         <h2 className="text-center py-10 font-bold text-2xl text-gray-700">
           Segera gabung obrolan
         </h2>
-        <div className="flex gap-[12px] justify-center">
+        <div className="flex gap-[12px] justify-center flex-wrap">
           {isLoading ? (
             <div>Loading...</div>
           ) : (

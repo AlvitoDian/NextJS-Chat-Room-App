@@ -53,7 +53,7 @@ export default function Login() {
       <div className="max-w-md w-full space-y-8 bg-white shadow-lg p-10 rounded-lg">
         <div>
           <h2 className="mt-6 text-center text-2xl font-bold text-gray-900">
-            Masuk untuk segera mengobrol^^
+            Masuk untuk segera mengobrol
           </h2>
         </div>
         <form className="mt-8 space-y-4" onSubmit={handleSubmit}>

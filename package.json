@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "axios": "^1.6.8",
     "bcryptjs": "^2.4.3",
     "http": "^0.0.1-security",
@@ -22,6 +24,7 @@
     "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

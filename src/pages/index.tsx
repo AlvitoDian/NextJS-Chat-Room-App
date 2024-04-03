@@ -8,6 +8,18 @@ export default function Home() {
   const [rooms, setRooms] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const images = [
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+  ];
+
   useEffect(() => {
     axios
       .get("/api/chatRoom/getAllRoom")
@@ -41,7 +53,13 @@ export default function Home() {
             <div>Loading...</div>
           ) : (
             rooms.map((room, index) => (
-              <CardRoom key={index} name={room.name} id={room._id} />
+              <CardRoom
+                key={index}
+                name={room.name}
+                id={room._id}
+                imgProfile={images}
+                imgBanner={"/bannerchat.png"}
+              />
             ))
           )}
         </div>

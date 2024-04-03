@@ -1,6 +1,8 @@
 import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import Avatar from "@/components/Avatar";
 
 export default function Navbar({ session }) {
   const handleLogout = async () => {
@@ -9,8 +11,12 @@ export default function Navbar({ session }) {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const handleDropdownToggle = () => {
-    setDropdownOpen(!dropdownOpen);
+  const handleDropdownOpen = () => {
+    setDropdownOpen(true);
+  };
+
+  const handleDropdownClose = () => {
+    setDropdownOpen(false);
   };
 
   return (
@@ -20,11 +26,7 @@ export default function Navbar({ session }) {
           href="/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
-          {/* <img
-            src="https://flowbite.com/docs/images/logo.svg"
-            className="h-8"
-            alt="Flowbite Logo"
-          /> */}
+          <Image src="/logo.png" alt="Flowbite Logo" width={30} height={30} />
           <span className="self-center text-2xl font-bold whitespace-nowrap text-[#6F3EFC]">
             Nimbrunk
           </span>
@@ -53,8 +55,8 @@ export default function Navbar({ session }) {
             />
           </svg>
         </button>
-        <div className="hidden w-full md:flex md:w-auto" id="navbar-default">
-          <ul className="bg-white font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 text-gray-600 font-[600]">
+        <div className="hidden w-full xxl:flex md:w-auto" id="navbar-default">
+          <ul className="bg-white font-medium flex items-center  p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 text-gray-600 font-[600]">
             <li>
               <Link
                 href="/"
@@ -84,13 +86,21 @@ export default function Navbar({ session }) {
             </li>
 
             {session ? (
-              <li className="relative">
+              <li
+                className="relative"
+                onMouseEnter={handleDropdownOpen}
+                onMouseLeave={handleDropdownClose}
+              >
                 <button
-                  onClick={handleDropdownToggle}
                   id="dropdownNavbarLink"
                   className="flex items-center justify-between w-full py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:p-0 md:w-auto "
                 >
                   {session.user.username}
+                  <div className="ml-2.5">
+                    <Avatar
+                      image={"https://www.w3schools.com/howto/img_avatar.png"}
+                    />
+                  </div>
                   <svg
                     className={`w-2.5 h-2.5 ms-2.5 ${
                       dropdownOpen ? "transform rotate-180" : ""
@@ -109,6 +119,7 @@ export default function Navbar({ session }) {
                     />
                   </svg>
                 </button>
+
                 {/* Dropdown menu */}
                 <div
                   id="dropdownNavbar"
@@ -131,12 +142,12 @@ export default function Navbar({ session }) {
                       </li>
                     )}
                     <li>
-                      <a
-                        href="#"
+                      <Link
+                        href={`/user/edit/${session.user.id}`}
                         className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                       >
                         Atur Profil
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                   <div className="py-1">

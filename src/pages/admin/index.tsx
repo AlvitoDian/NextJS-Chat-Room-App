@@ -5,6 +5,18 @@ import { useRouter } from "next/router";
 import axios from "axios";
 
 export default function Admin() {
+  const images = [
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+    "https://www.w3schools.com/howto/img_avatar.png",
+  ];
+
   const [rooms, setRooms] = useState([]);
   const router = useRouter();
   const [field, setField] = useState({
@@ -159,8 +171,14 @@ export default function Admin() {
           {isLoading ? (
             <div>Loading...</div>
           ) : (
-            rooms.map((room) => (
-              <CardRoom key={room._id} name={room.name} id={room._id} />
+            rooms.map((room, index) => (
+              <CardRoom
+                key={index}
+                name={room.name}
+                id={room._id}
+                imgProfile={images}
+                imgBanner={"/bannerchat.png"}
+              />
             ))
           )}
         </div>

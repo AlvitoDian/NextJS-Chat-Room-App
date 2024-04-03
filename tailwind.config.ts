@@ -12,6 +12,13 @@ const config: Config = {
       fontFamily: {
         sans: ["Poppins", "sans-serif"],
       },
+      screens: {
+        sm: "0px",
+        md: "640px",
+        lg: "768px",
+        xl: "1024px",
+        xxl: "1636px",
+      },
     },
   },
   plugins: [],

@@ -2,29 +2,20 @@ import Link from "next/link";
 import Avatar from "@/components/Avatar";
 import Image from "next/image";
 
-export default function CardRoom({ name, id }) {
-  const images = [
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-  ];
-
-  const totalImages: number = images.length;
-  const displayedImages: string[] = images.slice(0, 3);
+export default function CardRoom({ name, id, imgProfile, imgBanner }) {
+  const totalImages: number = imgProfile.length;
+  const displayedImages: string[] = imgProfile.slice(0, 3);
   const remainingCount: number = totalImages - 3;
 
-  const imagePlaceHold: any = `https://placehold.co/250x250.png?text=${remainingCount}`;
+  const imagePlaceHold: any = `https://placehold.co/250x250.png?text=${encodeURIComponent(
+    remainingCount + "+"
+  )}`;
+
   return (
     <Link href={`/chat-room/${id}`}>
       <div
         className="max-w-xl w-96 rounded-lg overflow-hidden shadow-lg flex justify-center items-end image-card overlay-gradient"
-        style={{ backgroundImage: `url("/bannerchat.png")` }}
+        style={{ backgroundImage: `url(${imgBanner})` }}
       >
         <div className="px-6 py-4 text-white z-10 flex flex-col items-center">
           <div className="font-bold text-xl mb-2">{name}</div>

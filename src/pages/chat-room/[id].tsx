@@ -30,6 +30,7 @@ export default function ChatRoom() {
       .get(`/api/chatRoom/${id}`)
       .then((response) => {
         const data = response.data;
+
         if (data.success) {
           setRoom(data.room);
         } else {
@@ -67,6 +68,7 @@ export default function ChatRoom() {
       setIsLoading(true);
       const response = await axios.get(`/api/message/getAllMessage/${id}`);
       const data = response.data;
+      console.log(data);
       if (data.success) {
         setMessages(data.messages);
       } else {
@@ -148,6 +150,7 @@ export default function ChatRoom() {
                     message={message.text}
                     time={message.createdAt}
                     isSender={message.user._id === session.user.id}
+                    profileImage={message.user.profileImage}
                   />
                 ))}
               </div>

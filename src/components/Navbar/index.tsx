@@ -97,9 +97,7 @@ export default function Navbar({ session }) {
                 >
                   {session.user.username}
                   <div className="ml-2.5">
-                    <Avatar
-                      image={"https://www.w3schools.com/howto/img_avatar.png"}
-                    />
+                    <Avatar image={session.user.profileImage} />
                   </div>
                   <svg
                     className={`w-2.5 h-2.5 ms-2.5 ${

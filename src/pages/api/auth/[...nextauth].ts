@@ -45,14 +45,20 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt(params) {
+      const { token, user } = params;
+      if (params.trigger === "update" && params.session?.user?.username) {
+        token.username = params.session.user.username;
+      }
+
       if (user) {
         token.username = user.username;
         token.email = user.email;
         token.id = user.id;
         token.roles = user.roles;
+        token.profileImage = user.profileImage;
       }
-      /*   console.log("This token : ", token); */
+
       return token;
     },
     async session({ session, token }) {
@@ -61,8 +67,9 @@ export const authOptions = {
         session.user.email = token.email;
         session.user.id = token.id;
         session.user.roles = token.roles;
+        session.user.profileImage = token.profileImage;
       }
-      /*    console.log("This session : ", session); */
+
       return session;
     },
   },

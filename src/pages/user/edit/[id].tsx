@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { useSession } from "next-auth/react";
 
 const getUserById = async (id) => {
   try {
@@ -24,6 +25,15 @@ const getUserById = async (id) => {
 };
 
 export default function EditUser() {
+  const [newUsername, setNewUsername] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+  const [previewImage, setPreviewImage] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { data: session, status, update } = useSession();
+
   const router = useRouter();
   const { id } = router.query;
 
@@ -32,8 +42,12 @@ export default function EditUser() {
       try {
         const userData = await getUserById(id);
         console.log(userData);
+        /*  if (!userData.user.profileImage) {
+          setProfileImage("https://www.w3schools.com/w3css/img_avatar2.png");
+        } */
         setNewUsername(userData.user.username);
         setNewEmail(userData.user.email);
+        setProfileImage(userData.user.profileImage);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -43,45 +57,67 @@ export default function EditUser() {
       fetchData();
     }
   }, [id]);
-  console.log("Fetch :", id);
 
-  const [newUsername, setNewUsername] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [profileImage, setProfileImage] = useState();
-  const [previewImage, setPreviewImage] = useState();
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const handleImageChange = (e: any) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      setProfileImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string);
+      };
+      reader.onerror = () => {
+        setError("Failed to read the file.");
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setError("Please select a file.");
+      setPreviewImage("");
+    }
+  };
 
   const handleSubmit = async (e: any) => {
-    /*   e.preventDefault();
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("username", newUsername);
+    formData.append("email", newEmail);
+    formData.append("profileImage", profileImage);
+
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
 
     try {
       setIsLoading(true);
-      const response = await axios.put(`/api/users/edit/${id}`, field, {
+      const response = await axios.put(`/api/users/edit/${id}`, formData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
       if (response.status >= 200 && response.status < 300) {
         setIsLoading(false);
+        const data = response.data;
 
-        setField({
-          name: "",
-        });
-        console.log(response);
-
-        setRooms((prevState) => [...prevState, response.data.savedRoom]);
-
-        console.log(field);
+        const updatedSession = {
+          ...session,
+          user: {
+            ...session.user,
+            username: data.user.username,
+            email: data.user.email,
+          },
+        };
+        update(updatedSession);
       } else {
         const errorMessage = response.data.message;
-        console.log("Signup failed", errorMessage);
+        console.log("Update failed", errorMessage);
       }
     } catch (error: any) {
       setError(error.response.data.message);
       setIsLoading(false);
-      console.log("Signup failed", error.message);
-    } */
+      console.log("Update failed", error.message);
+    }
   };
 
   return (
@@ -102,14 +138,14 @@ export default function EditUser() {
               {previewImage && (
                 <img
                   className="w-32 h-32 mb-3 rounded-full shadow-lg opacity-60 hover:opacity-90 transition duration-300 ease-in-out"
-                  src="https://www.w3schools.com/howto/img_avatar.png"
+                  src={previewImage}
                   alt="Profile preview"
                 />
               )}
               {!previewImage && (
                 <img
                   className="w-32 h-32 mb-3 rounded-full shadow-lg opacity-60 hover:opacity-90 transition duration-300 ease-in-out"
-                  src="https://www.w3schools.com/howto/img_avatar.png"
+                  src={profileImage}
                   alt="Profile image"
                 />
               )}
@@ -126,12 +162,17 @@ export default function EditUser() {
 
           {/* Form */}
           <div>
-            <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
+            <form
+              className="mt-8 space-y-4"
+              onSubmit={handleSubmit}
+              encType="multipart/form-data"
+            >
               <input
                 type="file"
                 id="profileImage"
                 accept=".png, .jpg, .jpeg"
                 name="profileImage"
+                onChange={handleImageChange}
                 style={{ display: "none" }}
               />
               <div>

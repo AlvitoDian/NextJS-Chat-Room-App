@@ -1,6 +1,14 @@
 import React, { useEffect, useRef } from "react";
+import Image from "next/image";
 
-export default function BubbleChat({ name, id, message, isSender, time }) {
+export default function BubbleChat({
+  name,
+  id,
+  message,
+  isSender,
+  time,
+  profileImage,
+}) {
   const bubbleRef = useRef(null);
 
   useEffect(() => {
@@ -32,10 +40,12 @@ export default function BubbleChat({ name, id, message, isSender, time }) {
         isSender ? "flex-row-reverse" : ""
       }`}
     >
-      <img
+      <Image
         className="w-8 h-8 rounded-full"
-        src="https://www.w3schools.com/howto/img_avatar.png"
+        src={profileImage}
         alt="Jese image"
+        width={100}
+        height={100}
       />
       <div className="flex flex-col gap-1 w-full max-w-[320px]">
         <div

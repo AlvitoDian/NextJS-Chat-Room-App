@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import User from "@/models/User";
 import { connectDB } from "@/utils/connectDB";
 const bcryptjs = require("bcryptjs");
+const gravatar = require("gravatar");
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,6 +24,17 @@ export default async function handler(
           .json({ message: "Username or Email already exists" });
       }
 
+      //? Generate Rand Avatar
+      const avatar = gravatar.url(
+        email,
+        {
+          s: "200",
+          r: "pg",
+          d: "retro",
+        },
+        true
+      );
+
       //? Hashing Password
       const salt = await bcryptjs.genSalt(10);
       const hashedPassword = await bcryptjs.hash(password, salt);
@@ -31,6 +43,7 @@ export default async function handler(
         email,
         password: hashedPassword,
         roles: "USER",
+        profileImage: avatar,
       });
 
       //? Save User

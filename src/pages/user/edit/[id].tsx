@@ -41,10 +41,6 @@ export default function EditUser() {
     const fetchData = async () => {
       try {
         const userData = await getUserById(id);
-        console.log(userData);
-        /*  if (!userData.user.profileImage) {
-          setProfileImage("https://www.w3schools.com/w3css/img_avatar2.png");
-        } */
         setNewUsername(userData.user.username);
         setNewEmail(userData.user.email);
         setProfileImage(userData.user.profileImage);
@@ -93,12 +89,13 @@ export default function EditUser() {
       setIsLoading(true);
       const response = await axios.put(`/api/users/edit/${id}`, formData, {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
       if (response.status >= 200 && response.status < 300) {
         setIsLoading(false);
         const data = response.data;
+        console.log(data);
 
         const updatedSession = {
           ...session,
@@ -114,7 +111,7 @@ export default function EditUser() {
         console.log("Update failed", errorMessage);
       }
     } catch (error: any) {
-      setError(error.response.data.message);
+      /*   setError(error.response.data.message); */
       setIsLoading(false);
       console.log("Update failed", error.message);
     }

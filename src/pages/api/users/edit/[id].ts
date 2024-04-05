@@ -30,7 +30,6 @@ export default async function handler(
           console.error("Error parsing form data:", err);
           return res.status(500).json({ error: "Error parsing form data" });
         }
-        let user;
 
         //? If Profile Image Update
         const profileImage = files?.profileImage?.[0];
@@ -39,48 +38,80 @@ export default async function handler(
           const fileExtension = path.extname(profileImage.originalFilename);
           const newFilename = `${profileImage.newFilename}${fileExtension}`;
 
+          /* const newPath = "/uploads".concat("/", newFilename); */
           const newPath = path.join(form.uploadDir, newFilename);
 
-          fs.rename(profileImage.filepath, newPath, (error) => {
+          fs.rename(profileImage.filepath, newPath, async (error) => {
             if (error) {
               console.error("Error renaming file:", error);
               return res.status(500).json({ error: "Error renaming file" });
             }
 
-            /* return res
-              .status(200)
-              .json({ message: "File uploaded successfully" }); */
+            try {
+              const existingUser = await User.findById(id);
+
+              if (!existingUser) {
+                return res.status(400).json({ error: "User Not Found" });
+              }
+
+              let pathDB = newPath.split("\\");
+              console.log(pathDB);
+              let lastPath = pathDB[pathDB.length - 1];
+              let pathPublic = "/uploads/" + lastPath;
+
+              existingUser.profileImage = pathPublic;
+
+              const updatedUser = await existingUser.save();
+
+              if (!updatedUser) {
+                return res.status(404).json({ error: "User not found" });
+              }
+
+              return res.status(200).json({
+                message: "User updated successfully",
+                user: updatedUser,
+              });
+            } catch (updateError) {
+              console.error("Error updating user:", updateError);
+              return res.status(500).json({ error: "Error updating user" });
+            }
           });
-        }
+        } else {
+          //? If Username and Email Update
+          const { username, email } = fields;
+          if (username || email) {
+            try {
+              const existingUser = await User.findById(id);
 
-        //? If Username and Email Update
-        const { username, email } = fields;
-        if (username || email) {
-          const existingUser = await User.findById(id);
+              if (!existingUser) {
+                return res.status(400).json({ error: "User Not Found" });
+              }
 
-          if (!existingUser) {
-            return res.status(400).json({ error: "User Not Found" });
+              existingUser.username =
+                username.toString() || existingUser.username;
+              existingUser.email = email.toString() || existingUser.email;
+
+              const updatedUser = await existingUser.save();
+
+              if (!updatedUser) {
+                return res.status(404).json({ error: "User not found" });
+              }
+
+              return res.status(200).json({
+                message: "User updated successfully",
+                user: updatedUser,
+              });
+            } catch (updateError) {
+              console.error("Error updating user:", updateError);
+              return res.status(500).json({ error: "Error updating user" });
+            }
+          } else {
+            // If no profile image, username, or email provided
+            return res
+              .status(400)
+              .json({ error: "No data provided for update" });
           }
-
-          existingUser.username = username.toString() || existingUser.username;
-          existingUser.email = email.toString() || existingUser.email;
-
-          const updatedUser = await existingUser.save();
-
-          if (!updatedUser) {
-            return res.status(404).json({ error: "User not found" });
-          }
-
-          user = updatedUser;
-
-          return res.status(200).json({
-            message: "User updated successfully",
-            user: updatedUser,
-          });
         }
-
-        console.log("Fields:", fields);
-        console.log("Files:", files);
       });
     } catch (error) {
       console.error("Error updating user:", error);

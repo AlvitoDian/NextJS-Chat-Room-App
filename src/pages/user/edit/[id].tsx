@@ -103,6 +103,7 @@ export default function EditUser() {
             ...session.user,
             username: data.user.username,
             email: data.user.email,
+            profileImage: data.user.profileImage,
           },
         };
         update(updatedSession);

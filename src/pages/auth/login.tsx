@@ -1,16 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export default function Login() {
   const router = useRouter();
-
+  const { data: session, status } = useSession();
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingPage, setIsLoadingPage] = useState(true);
+
+  useEffect(() => {
+    // Jika session status adalah 'authenticated', redirect ke halaman utama.
+    if (session && status === "authenticated") {
+      router.push("/");
+    } else {
+      setIsLoadingPage(false);
+    }
+  }, [session, status]);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -48,6 +59,11 @@ export default function Login() {
       console.log("Signup failed", error.message);
     }
   };
+
+  if (isLoadingPage) {
+    return;
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[#e1daf7]">
       <div className="max-w-md w-full space-y-8 bg-white shadow-lg p-10 rounded-lg">

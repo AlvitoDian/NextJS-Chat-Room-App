@@ -1,6 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-
-import User from "@/models/User";
 import Message from "@/models/Message";
 import { connectDB } from "@/utils/connectDB";
 
@@ -14,7 +12,6 @@ export default async function handler(
 
       const { roomId } = req.query;
 
-      // Mencari semua pesan berdasarkan roomId
       const messages = await Message.find({
         room: roomId,
       }).populate("user");

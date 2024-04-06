@@ -6,6 +6,7 @@ import axios from "axios";
 
 export default function Home() {
   const [rooms, setRooms] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const images = [
@@ -25,6 +26,7 @@ export default function Home() {
       .get("/api/chatRoom/getAllRoom")
       .then((response) => {
         const data = response.data;
+
         if (data.success) {
           setRooms(data.rooms);
         } else {
@@ -59,6 +61,7 @@ export default function Home() {
                 id={room._id}
                 imgProfile={images}
                 imgBanner={"/bannerchat.png"}
+                participants={room.participants}
               />
             ))
           )}

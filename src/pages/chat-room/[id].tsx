@@ -68,7 +68,7 @@ export default function ChatRoom() {
       setIsLoading(true);
       const response = await axios.get(`/api/message/getAllMessage/${id}`);
       const data = response.data;
-      console.log(data);
+
       if (data.success) {
         setMessages(data.messages);
       } else {
@@ -96,7 +96,6 @@ export default function ChatRoom() {
       });
 
       const data = response.data;
-      console.log("Send Message Response", data);
       if (data.success) {
         console.log("After Send", data.savedMessage);
         let sendSocket = data.savedMessage;

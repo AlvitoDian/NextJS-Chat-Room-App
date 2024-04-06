@@ -17,12 +17,25 @@ import { NextResponse } from "next/server";
 
 export default withAuth(
   function middleware(req: NextRequestWithAuth) {
-    console.log("Ini Next Auth Token: ", req.nextauth.token);
+    //? Admin Page Protect
     if (
       req.nextUrl.pathname.startsWith("/admin") &&
       req.nextauth.token?.roles !== "ADMIN"
     ) {
-      return NextResponse.rewrite(new URL("/", req.url));
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+
+    //? User Edit Protect
+    if (
+      !req.nextauth?.token &&
+      req.nextUrl.pathname.startsWith("/user/edit/")
+    ) {
+      return NextResponse.redirect("/auth/login");
+    }
+
+    //? Chat Room Protect
+    if (!req.nextauth?.token && req.nextUrl.pathname.startsWith("/chatroom/")) {
+      return NextResponse.redirect("/auth/login");
     }
   },
   {
@@ -35,4 +48,6 @@ export default withAuth(
   }
 );
 
-export const config = { matcher: ["/admin"] };
+export const config = {
+  matcher: ["/admin", "/user/edit/:id*", "/chat-room/:id*"],
+};

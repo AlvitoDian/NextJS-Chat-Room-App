@@ -10,7 +10,9 @@ export default async function handler(
     try {
       await connectDB();
 
-      const rooms = await Room.find();
+      const rooms = await Room.find({
+        participants: { $exists: true },
+      }).populate("participants");
 
       return res.status(200).json({
         message: "Rooms fetched successfully",

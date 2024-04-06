@@ -5,7 +5,6 @@ import Image from "next/image";
 import Avatar from "@/components/Avatar";
 
 export default function Navbar({ session }) {
-  console.log(session);
   const handleLogout = async () => {
     await signOut();
   };

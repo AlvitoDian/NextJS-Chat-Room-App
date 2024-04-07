@@ -4,7 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import Avatar from "@/components/Avatar";
 
-export default function Navbar({ session }) {
+export default function Navbar() {
+  const { data: session } = useSession() as any;
   const handleLogout = async () => {
     await signOut();
   };
@@ -18,6 +19,8 @@ export default function Navbar({ session }) {
   const handleDropdownClose = () => {
     setDropdownOpen(false);
   };
+
+  console.log("ss now", session);
 
   return (
     <nav className="bg-white border-gray-200 sticky top-0 z-10">
@@ -55,7 +58,7 @@ export default function Navbar({ session }) {
             />
           </svg>
         </button>
-        <div className="hidden w-full xxl:flex md:w-auto" id="navbar-default">
+        <div className="hidden w-full lg:flex md:w-auto" id="navbar-default">
           <ul className="bg-white font-medium flex items-center  p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 text-gray-600 font-[600]">
             <li>
               <Link
@@ -77,7 +80,16 @@ export default function Navbar({ session }) {
             </li>
             <li>
               <a
-                href="#"
+                href="/faq"
+                className="block py-2 px-3 rounded md:bg-transparent md:p-0 "
+                aria-current="page"
+              >
+                FaQ
+              </a>
+            </li>
+            <li>
+              <a
+                href="/faq"
                 className="block py-2 px-3 rounded md:bg-transparent md:p-0 "
                 aria-current="page"
               >

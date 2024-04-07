@@ -16,7 +16,7 @@ export default function AppMain(props: AppMainProps) {
 
   return (
     <>
-      <Navbar session={session} />
+      <Navbar />
       {children}
       <Footer />
     </>

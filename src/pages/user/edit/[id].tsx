@@ -95,7 +95,6 @@ export default function EditUser() {
       if (response.status >= 200 && response.status < 300) {
         setIsLoading(false);
         const data = response.data;
-        console.log(data);
 
         const updatedSession = {
           ...session,
@@ -106,13 +105,14 @@ export default function EditUser() {
             profileImage: data.user.profileImage,
           },
         };
+        console.log("ss edited", updatedSession);
         update(updatedSession);
       } else {
         const errorMessage = response.data.message;
         console.log("Update failed", errorMessage);
       }
     } catch (error: any) {
-      /*   setError(error.response.data.message); */
+      setError(error.response.data.message);
       setIsLoading(false);
       console.log("Update failed", error.message);
     }

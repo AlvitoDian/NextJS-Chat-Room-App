@@ -47,8 +47,10 @@ export const authOptions = {
   callbacks: {
     async jwt(params) {
       const { token, user } = params;
-      if (params.trigger === "update" && params.session?.user?.username) {
+      if (params.trigger === "update" && params.session?.user) {
         token.username = params.session.user.username;
+        token.email = params.session.user.email;
+        token.profileImage = params.session.user.profileImage;
       }
 
       if (user) {

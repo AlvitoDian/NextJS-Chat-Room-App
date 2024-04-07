@@ -36,5 +36,19 @@
 }
 
 .image-card:hover::after {
-  animation: fadeIn 0.5s ease-in-out;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease-out;
+}
+
+.wrapper.is-open {
+  grid-template-rows: 1fr;
+}
+
+.inner {
+  overflow: hidden;
 }

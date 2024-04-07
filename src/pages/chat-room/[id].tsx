@@ -3,6 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import BubbleChat from "@/components/BubbleChat";
+import Avatar from "@/components/Avatar";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import io from "socket.io-client";
@@ -13,6 +14,7 @@ export default function ChatRoom() {
   const { id } = router.query;
   const { data: session, status } = useSession() as any;
   const [room, setRoom] = useState(null);
+  const [participants, setParticipants] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -33,6 +35,10 @@ export default function ChatRoom() {
 
         if (data.success) {
           setRoom(data.room);
+          const participantsUsernames = data.room.participants.map(
+            (participant) => participant.username
+          );
+          setParticipants(participantsUsernames);
         } else {
           console.error("Error fetching rooms:", data.error);
         }
@@ -136,11 +142,36 @@ export default function ChatRoom() {
       <div className="px-10 py-10">
         <div className="flex gap-[12px] justify-center">
           <div className="max-w-xl w-full rounded shadow-lg h-[80vh] relative">
-            <div className="px-6 py-4 flex justify-center">
-              <div className="font-bold text-xl mb-2">{room.name}</div>
+            <div className="flex bg-gray-100 rounded-t">
+              {/* Grup Icon */}
+              <div className="flex justify-center items-center px-4">
+                <Avatar image={session.user.profileImage} />
+              </div>
+              {/* Grup Members */}
+              <div className="py-2 flex flex-col">
+                <div className="font-bold text-lg text-gray-900">
+                  {room.name}
+                </div>
+                <div className="font-sm text-sm text-gray-500">
+                  {participants.length > 7
+                    ? participants.slice(0, 7).map((participant, index) => (
+                        <span key={index}>
+                          {participant}
+                          {index !== 6 && ", "}
+                        </span>
+                      ))
+                    : participants.map((participant, index) => (
+                        <span key={index}>
+                          {participant}
+                          {index !== participants.length - 1 && ", "}
+                        </span>
+                      ))}
+                  {participants.length > 7 && <span>...</span>}
+                </div>
+              </div>
             </div>
             <div className="flex flex-col px-5">
-              <div className="flex flex-col -ml-5 px-5 w-70 h-[65vh] absolute bottom-0 mb-20 overflow-auto w-full">
+              <div className="flex flex-col -ml-5 px-5 w-70 h-[64vh] absolute bottom-0 mb-20 overflow-auto w-full">
                 {messages.map((message, index) => (
                   <BubbleChat
                     key={index}

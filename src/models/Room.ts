@@ -11,7 +11,6 @@ const roomSchema = new Schema(
     participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     roomImage: {
       type: String,
-      required: false,
     },
   },
   {

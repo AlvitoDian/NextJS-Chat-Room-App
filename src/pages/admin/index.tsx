@@ -178,6 +178,7 @@ export default function Admin() {
                 id={room._id}
                 imgProfile={images}
                 imgBanner={"/bannerchat.png"}
+                participants={room.participants}
               />
             ))
           )}

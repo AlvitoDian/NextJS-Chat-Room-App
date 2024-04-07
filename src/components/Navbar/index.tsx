@@ -20,8 +20,6 @@ export default function Navbar() {
     setDropdownOpen(false);
   };
 
-  console.log("ss now", session);
-
   return (
     <nav className="bg-white border-gray-200 sticky top-0 z-10">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">

@@ -1,6 +1,7 @@
 import Head from "next/head";
 import CardRoom from "@/components/CardRoom";
 import Hero from "@/components/Hero";
+import Feature from "@/components/Feature";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -46,6 +47,7 @@ export default function Home() {
         <title>Home</title>
       </Head>
       <Hero />
+      <Feature />
       <div className="px-10 py-10">
         <h2 className="text-center py-10 font-bold text-2xl text-gray-700">
           Segera gabung obrolan

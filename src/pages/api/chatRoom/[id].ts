@@ -16,7 +16,10 @@ export default async function handler(
         return res.status(400).json({ error: "Room ID is required" });
       }
 
-      const room = await Room.findById(id);
+      const room = await Room.findOne({
+        _id: id,
+        participants: { $exists: true },
+      }).populate("participants");
 
       if (!room) {
         return res.status(404).json({ error: "Room not found" });

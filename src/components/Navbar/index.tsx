@@ -71,15 +71,6 @@ export default function Navbar() {
             </li>
             <li>
               <a
-                href="#"
-                className="block py-2 px-3 rounded md:bg-transparent md:p-0 "
-                aria-current="page"
-              >
-                About
-              </a>
-            </li>
-            <li>
-              <a
                 href="/faq"
                 className="block py-2 px-3 rounded md:bg-transparent md:p-0 "
                 aria-current="page"

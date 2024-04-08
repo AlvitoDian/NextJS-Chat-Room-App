@@ -57,7 +57,7 @@ export default function BubbleChat({
             {isSender ? "You" : name}
           </span>
           <span
-            className={`text-sm font-normal text-gray-500 dark:text-gray-400 ${
+            className={`text-sm font-medium text-gray-500 dark:text-gray-500 ${
               isSender ? "pr-2" : ""
             }`}
           >
@@ -69,7 +69,7 @@ export default function BubbleChat({
             isSender
               ? "rounded-s-xl rounded-br-xl"
               : "rounded-e-xl rounded-es-xl"
-          }  dark:bg-gray-700`}
+          }  bg-gradient-to-b from-[#906BFA] to-[#a182f5]`}
         >
           <p className="text-sm font-normal text-gray-900 dark:text-white">
             {message}

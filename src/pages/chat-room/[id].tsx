@@ -7,6 +7,7 @@ import Avatar from "@/components/Avatar";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import io from "socket.io-client";
+import ContactField from "@/components/ContactField";
 
 export default function ChatRoom() {
   let socket = io();
@@ -140,9 +141,10 @@ export default function ChatRoom() {
         <title>Chat Section</title>
       </Head>
       <div className="px-10 py-10">
-        <div className="flex gap-[12px] justify-center">
-          <div className="max-w-xl w-full rounded-lg shadow-lg h-[80vh] relative">
-            <div className="flex bg-[#906bfa] rounded-t-lg drop-shadow-lg">
+        <div className="flex justify-center">
+          {/* Chat Field */}
+          <div className="max-w-xl w-full rounded-lg shadow-lg h-[735px] relative">
+            <div className="flex bg-[#906bfa] rounded-t-lg drop-shadow-lg z-[99]">
               {/* Grup Icon */}
               <div className="flex justify-center items-center px-4">
                 <Avatar image={session.user.profileImage} />
@@ -168,9 +170,10 @@ export default function ChatRoom() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col px-5">
+            <div className="flex flex-col px-5 ">
               <div
                 className="flex flex-col -ml-5 px-5 w-70 h-[615px] absolute bottom-4 mb-10 overflow-auto w-full custom-scrollbar"
+                id="style-3"
                 style={{
                   backgroundImage: `url('/pattern.png')`,
                   backgroundSize: "cover",

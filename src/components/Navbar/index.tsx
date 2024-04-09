@@ -21,7 +21,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white border-gray-200 sticky top-0 z-10">
+    <nav className="bg-white border-gray-200 sticky top-0 z-[999]">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link
           href="/"
@@ -87,78 +87,89 @@ export default function Navbar() {
             </li>
 
             {session ? (
-              <li
-                className="relative"
-                onMouseEnter={handleDropdownOpen}
-                onMouseLeave={handleDropdownClose}
-              >
-                <button
-                  id="dropdownNavbarLink"
-                  className="flex items-center justify-between w-full py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:p-0 md:w-auto "
-                >
-                  {session.user.username}
-                  <div className="ml-2.5">
-                    <Avatar image={session.user.profileImage} />
-                  </div>
-                  <svg
-                    className={`w-2.5 h-2.5 ms-2.5 ${
-                      dropdownOpen ? "transform rotate-180" : ""
-                    }`}
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 10 6"
+              <>
+                <li>
+                  <a
+                    href="/direct-message"
+                    className="block py-2 px-3 rounded md:bg-transparent md:p-0 "
+                    aria-current="page"
                   >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="m1 1 4 4 4-4"
-                    />
-                  </svg>
-                </button>
+                    Direct Message
+                  </a>
+                </li>
+                <li
+                  className="relative"
+                  onMouseEnter={handleDropdownOpen}
+                  onMouseLeave={handleDropdownClose}
+                >
+                  <button
+                    id="dropdownNavbarLink"
+                    className="flex items-center justify-between w-full py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:p-0 md:w-auto "
+                  >
+                    {session.user.username}
+                    <div className="ml-2.5">
+                      <Avatar image={session.user.profileImage} />
+                    </div>
+                    <svg
+                      className={`w-2.5 h-2.5 ms-2.5 ${
+                        dropdownOpen ? "transform rotate-180" : ""
+                      }`}
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 10 6"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="m1 1 4 4 4-4"
+                      />
+                    </svg>
+                  </button>
 
-                {/* Dropdown menu */}
-                <div
-                  id="dropdownNavbar"
-                  className={`${
-                    dropdownOpen ? "block" : "hidden"
-                  } absolute top-full left-0 z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:divide-gray-600 shadow-lg`}
-                >
-                  <ul
-                    className="py-2 text-sm text-gray-700   "
-                    aria-labelledby="dropdownLargeButton"
+                  {/* Dropdown menu */}
+                  <div
+                    id="dropdownNavbar"
+                    className={`${
+                      dropdownOpen ? "block" : "hidden"
+                    } absolute top-full left-0 z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:divide-gray-600 shadow-lg`}
                   >
-                    {session.user.roles.includes("ADMIN") && (
+                    <ul
+                      className="py-2 text-sm text-gray-700   "
+                      aria-labelledby="dropdownLargeButton"
+                    >
+                      {session.user.roles.includes("ADMIN") && (
+                        <li>
+                          <Link
+                            href="/admin"
+                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          >
+                            Admin Page
+                          </Link>
+                        </li>
+                      )}
                       <li>
                         <Link
-                          href="/admin"
+                          href={`/user/edit/${session.user.id}`}
                           className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                         >
-                          Admin Page
+                          Atur Profil
                         </Link>
                       </li>
-                    )}
-                    <li>
-                      <Link
-                        href={`/user/edit/${session.user.id}`}
-                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    </ul>
+                    <div className="py-1">
+                      <a
+                        onClick={handleLogout}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
                       >
-                        Atur Profil
-                      </Link>
-                    </li>
-                  </ul>
-                  <div className="py-1">
-                    <a
-                      onClick={handleLogout}
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-                    >
-                      Sign out
-                    </a>
+                        Sign out
+                      </a>
+                    </div>
                   </div>
-                </div>
-              </li>
+                </li>
+              </>
             ) : (
               <>
                 <li>

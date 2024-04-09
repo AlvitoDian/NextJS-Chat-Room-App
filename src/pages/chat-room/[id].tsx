@@ -8,18 +8,28 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import io from "socket.io-client";
 import ContactField from "@/components/ContactField";
+import UserProfileModal from "@/components/UserProfileModal";
 
 export default function ChatRoom() {
   let socket = io();
   const router = useRouter();
   const { id } = router.query;
   const { data: session, status } = useSession() as any;
+  const [modalUserIsOpen, setModalUserIsOpen] = useState(false);
   const [room, setRoom] = useState(null);
   const [participants, setParticipants] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [socketConnected, setSocketConnected] = useState(false);
+
+  const openModal = () => {
+    setModalUserIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalUserIsOpen(false);
+  };
 
   //? Fetch room details on page load
   useEffect(() => {
@@ -135,12 +145,17 @@ export default function ChatRoom() {
     );
   }
 
+  const openModalUser = (isOpen) => {
+    setModalUserIsOpen(isOpen);
+  };
+
   return (
     <>
       <Head>
         <title>Chat Section</title>
       </Head>
       <div className="px-10 py-10">
+        {modalUserIsOpen && <UserProfileModal />}
         <div className="flex justify-center">
           {/* Chat Field */}
           <div className="max-w-xl w-full rounded-lg shadow-lg h-[735px] relative">
@@ -184,12 +199,14 @@ export default function ChatRoom() {
                 {messages.map((message, index) => (
                   <BubbleChat
                     key={index}
+                    userId={message.user._id}
                     id={message._id}
                     name={message.user.username}
                     message={message.text}
                     time={message.createdAt}
                     isSender={message.user._id === session.user.id}
                     profileImage={message.user.profileImage}
+                    openModalUser={openModalUser}
                   />
                 ))}
               </div>

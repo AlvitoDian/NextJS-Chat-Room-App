@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
+import axios from "axios";
 
 export default function BubbleChat({
   name,
@@ -8,6 +9,8 @@ export default function BubbleChat({
   isSender,
   time,
   profileImage,
+  userId,
+  openModalUser,
 }) {
   const bubbleRef = useRef(null);
 
@@ -33,6 +36,24 @@ export default function BubbleChat({
     }
   }
 
+  const handleOpenUserProfile = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/api/users/detailUser/${userId}`,
+        {
+          headers: {
+            "Cache-Control": "no-store",
+          },
+        }
+      );
+      openModalUser(true);
+      console.log(res.data);
+    } catch (error) {
+      console.error("Error fetching user detail:", error);
+      throw new Error("Failed to fetch user detail");
+    }
+  };
+
   return (
     <div
       ref={bubbleRef}
@@ -41,17 +62,19 @@ export default function BubbleChat({
       }`}
     >
       <Image
-        className="w-8 h-8 rounded-full"
+        className="w-8 h-8 rounded-full cursor-pointer"
         src={profileImage}
         alt="Jese image"
         width={100}
         height={100}
+        onClick={handleOpenUserProfile}
       />
       <div className="flex flex-col gap-1 w-full max-w-[320px]">
         <div
-          className={`flex items-center space-x-2 rtl:space-x-reverse ${
+          className={`flex items-center space-x-2 rtl:space-x-reverse cursor-pointer ${
             isSender ? "flex-row-reverse" : ""
           }`}
+          onClick={handleOpenUserProfile}
         >
           <span className="text-sm font-semibold text-gray-900 ">
             {isSender ? "You" : name}

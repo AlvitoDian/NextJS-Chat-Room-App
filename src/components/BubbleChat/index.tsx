@@ -11,6 +11,7 @@ export default function BubbleChat({
   profileImage,
   userId,
   openModalUser,
+  setProfileUser,
 }) {
   const bubbleRef = useRef(null);
 
@@ -47,7 +48,7 @@ export default function BubbleChat({
         }
       );
       openModalUser(true);
-      console.log(res.data);
+      setProfileUser(res.data);
     } catch (error) {
       console.error("Error fetching user detail:", error);
       throw new Error("Failed to fetch user detail");

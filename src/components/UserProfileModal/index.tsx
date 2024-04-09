@@ -1,6 +1,33 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMessage, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
-export default function UserProfileModal() {
+export default function UserProfileModal({
+  openModalUser,
+  username,
+  email,
+  profileImage,
+}) {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Function to handle click outside the modal
+    function handleClickOutside(event) {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        openModalUser(false);
+      }
+    }
+
+    // Adding event listener when component mounts
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Removing event listener when component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openModalUser]);
+
   const user = {
     name: "John Doe",
     email: "john@example.com",
@@ -12,10 +39,10 @@ export default function UserProfileModal() {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-4 rounded-lg w-96">
+      <div ref={modalRef} className="bg-white p-4 rounded-lg w-96 relative">
         <button
-          className="absolute top-2 right-2"
-          onClick={() => console.log("Close clicked")}
+          className="absolute top-3 right-3"
+          onClick={() => openModalUser(false)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -34,22 +61,40 @@ export default function UserProfileModal() {
         </button>
         <div className="flex items-center justify-center">
           <img
-            src={user.avatar}
-            alt={user.name}
+            src={profileImage}
+            alt={username}
             className="w-16 h-16 rounded-full"
           />
           <div className="ml-4">
-            <h2 className="text-lg font-semibold">{user.name}</h2>
-            <p className="text-sm text-gray-500">{user.email}</p>
+            <h2 className="text-lg font-semibold">{username}</h2>
+            <p className="text-sm text-gray-500">{email}</p>
           </div>
         </div>
         <div className="mt-4">
           <h3 className="text-md font-semibold">User Details</h3>
-          <p className="mt-2 text-sm text-gray-500">
-            Username: {user.username}
-          </p>
+          <p className="mt-2 text-sm text-gray-500">Username: {username}</p>
           <p className="mt-1 text-sm text-gray-500">Phone: {user.phone}</p>
           <p className="mt-1 text-sm text-gray-500">Website: {user.website}</p>
+        </div>
+        <div className="flex p-5 gap-10 justify-center items-center">
+          <Link
+            href={"#"}
+            className="pt-2 text-[#6F3EFC] hover:text-[#8860fc] flex flex-col justify-center items-center"
+          >
+            <FontAwesomeIcon className="text-[20px]" icon={faMessage} />
+            <span className="text-[11px] pt-2 font-medium text-gray-500">
+              Direct Message
+            </span>
+          </Link>
+          <Link
+            href={"#"}
+            className="pt-2 text-[#6F3EFC] hover:text-[#8860fc] flex flex-col justify-center items-center"
+          >
+            <FontAwesomeIcon className="text-[20px]" icon={faUserPlus} />
+            <span className="text-[11px] pt-2 font-medium text-gray-500">
+              Add Friend
+            </span>
+          </Link>
         </div>
       </div>
     </div>

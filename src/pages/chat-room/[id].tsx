@@ -16,6 +16,7 @@ export default function ChatRoom() {
   const { id } = router.query;
   const { data: session, status } = useSession() as any;
   const [modalUserIsOpen, setModalUserIsOpen] = useState(false);
+  const [profileUserModal, setProfileUserModal] = useState<any>("");
   const [room, setRoom] = useState(null);
   const [participants, setParticipants] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -149,13 +150,25 @@ export default function ChatRoom() {
     setModalUserIsOpen(isOpen);
   };
 
+  const setProfileUser = (user) => {
+    setProfileUserModal(user);
+  };
+
   return (
     <>
       <Head>
         <title>Chat Section</title>
       </Head>
       <div className="px-10 py-10">
-        {modalUserIsOpen && <UserProfileModal />}
+        {modalUserIsOpen && profileUserModal.user ? (
+          <UserProfileModal
+            openModalUser={openModalUser}
+            username={profileUserModal.user.username}
+            email={profileUserModal.user.email}
+            profileImage={profileUserModal.user.profileImage}
+          />
+        ) : null}
+
         <div className="flex justify-center">
           {/* Chat Field */}
           <div className="max-w-xl w-full rounded-lg shadow-lg h-[735px] relative">
@@ -207,6 +220,7 @@ export default function ChatRoom() {
                     isSender={message.user._id === session.user.id}
                     profileImage={message.user.profileImage}
                     openModalUser={openModalUser}
+                    setProfileUser={setProfileUser}
                   />
                 ))}
               </div>

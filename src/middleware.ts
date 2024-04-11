@@ -37,6 +37,14 @@ export default withAuth(
     if (!req.nextauth?.token && req.nextUrl.pathname.startsWith("/chatroom/")) {
       return NextResponse.redirect("/auth/login");
     }
+
+    //? Direct Message Protect
+    if (
+      !req.nextauth?.token &&
+      req.nextUrl.pathname.startsWith("/direct-message/")
+    ) {
+      return NextResponse.redirect("/auth/login");
+    }
   },
   {
     callbacks: {
@@ -49,5 +57,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/admin", "/user/edit/:id*", "/chat-room/:id*"],
+  matcher: ["/admin", "/user/edit/:id*", "/chat-room/:id*", "/direct-message/"],
 };

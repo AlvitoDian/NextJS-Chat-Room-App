@@ -76,66 +76,30 @@ export default function DirectMessage() {
     fetchMessages();
   }, [session.user.id]);
 
-  /*   const handleReceiverClick = (username) => {
-    const selectedReceiver = receiver.find(
-      (contact) => contact.receiver.username === username
-    );
-    console.log(selectedReceiver);
-
-    if (selectedReceiver) {
-      setReceiverProfile(selectedReceiver.receiver.username);
-
-      const messages = selectedReceiver.messages.map(
-        (message) => message.content
-      );
-
-      setMessages(messages);
-    }
-  };
- */
   console.log(receiver);
 
   const handleReceiverClick = async (id) => {
     console.log("clicked", id);
     const selectedReceiver = receiver.find((contact) => {
       return (
-        (contact.receiver._id === id || contact.sender._id === id) && // Cek apakah id adalah penerima atau pengirim
+        (contact.receiver._id === id || contact.sender._id === id) &&
         (contact.sender._id === session.user.id ||
-          contact.receiver._id === session.user.id) // Cek apakah pengguna saat ini adalah pengirim atau penerima
+          contact.receiver._id === session.user.id)
       );
     });
     setCurrentMessages(selectedReceiver);
     console.log(currentMessages);
 
     await fetchReceiverUser(id);
-    /*  if (selectedReceiver) {
-      setReceiverProfile(selectedReceiver.receiver.username);
-
-      const messages = selectedReceiver.messages.map(
-        (message) => message.content
-      );
-
-      setMessages(messages);
-    } */
   };
-  /* 
-  const currentUserId = session.user.id;
 
-  const isCurrentUserSender =
-    directMessage.sender._id.toString() === currentUserId;
-  const isCurrentUserReceiver =
-    directMessage.receiver._id.toString() === currentUserId;
-
-  const isCurrentUserSenderOrReceiver =
-    directMessage.messages.some(
-      (message) =>
-        message.role === "sender" && message.sender.toString() === currentUserId
-    ) ||
-    directMessage.messages.some(
-      (message) =>
-        message.role === "receiver" &&
-        message.receiver.toString() === currentUserId
-    ); */
+  const getMessageRole = (currentMessages, sessionUserId) => {
+    if (currentMessages.receiver._id === sessionUserId) {
+      return "receiver";
+    } else {
+      return "sender";
+    }
+  };
 
   return (
     <>
@@ -280,19 +244,33 @@ export default function DirectMessage() {
                 {currentMessages &&
                 currentMessages.messages &&
                 currentMessages.messages.length > 0 ? (
-                  currentMessages.messages.map((message, index) => (
-                    <BubbleChat
-                      key={index}
-                      id={message._id}
-                      name={"ini nama"}
-                      message={message.content}
-                      time={message.createdAt}
-                      isSender={true} // Set isSender to true if the current user is the sender
-                      profileImage={
-                        "https://www.w3schools.com/howto/img_avatar.png"
-                      }
-                    />
-                  ))
+                  currentMessages.messages.map((message, index) => {
+                    console.log(currentMessages);
+                    return (
+                      <BubbleChat
+                        key={index}
+                        id={message._id}
+                        message={message.content}
+                        time={message.createdAt}
+                        isSender={
+                          getMessageRole(currentMessages, session.user.id) ===
+                          message.role
+                        }
+                        name={
+                          getMessageRole(currentMessages, session.user.id) ===
+                          message.role
+                            ? currentMessages.receiver.username // Menggunakan profileImage sender jika isSender true
+                            : currentMessages.sender.username
+                        }
+                        profileImage={
+                          getMessageRole(currentMessages, session.user.id) ===
+                          message.role
+                            ? currentMessages.receiver.profileImage // Menggunakan profileImage sender jika isSender true
+                            : currentMessages.sender.profileImage // Atau gunakan url default jika isSender false
+                        }
+                      />
+                    );
+                  })
                 ) : (
                   <p className="text-center">Tidak ada pesan.</p>
                 )}

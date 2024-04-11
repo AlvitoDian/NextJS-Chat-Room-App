@@ -5,41 +5,132 @@ import Avatar from "@/components/Avatar";
 import BubbleChat from "@/components/BubbleChat";
 import Head from "next/head";
 import { useReceiver } from "@/contexts/ReceiverContext";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 export default function DirectMessage() {
   const { receiverUser, fetchReceiverUser } = useReceiver();
 
   //? Contact Field
   const [sender, setSender] = useState("User Saat ini");
-  const [receiver, setReceiver] = useState([
-    { username: "Andi", message: "Hai, apa kabar?" },
-    { username: "Budi", message: "Baik, terima kasih!" },
-    { username: "Cici", message: "Ada yang bisa saya bantu?" },
-    { username: "Dini", message: "Sedang santai, kamu bagaimana?" },
-    { username: "Eka", message: "Sama-sama santai" },
-    { username: "Fajar", message: "Ada rencana untuk akhir pekan?" },
-    { username: "Gita", message: "Belum, mungkin nonton film" },
-    { username: "Hadi", message: "Bagus juga" },
-    { username: "Indah", message: "Kita harus ajak lebih banyak orang" },
-    { username: "Joko", message: "Setuju!" },
-  ]);
+  const [receiver, setReceiver] = useState<any>([]);
+
+  //? Session Data
+  const { data: session } = useSession() as any;
 
   //? Chat Field
-  const [receiverProfile, setReceiverProfile] = useState(
-    receiverUser.user.username
-  );
-  const [receiverMessage, setReceiverMessage] = useState("");
-  const handleReceiverClick = (username) => {
+  const [receiverProfile, setReceiverProfile] = useState(receiverUser.user);
+  const [message, setMessage] = useState("");
+  const [currentMessages, setCurrentMessages] = useState<any>();
+
+  //? Function Send Message
+  const sendMessage = async () => {
+    if (message.trim() === "") {
+      return;
+    }
+
+    try {
+      const sender = session.user.id;
+      const receiver = receiverUser.user._id;
+      const response = await axios.post(`/api/directMessage/addMessage`, {
+        content: message,
+        sender: sender,
+        receiver: receiver,
+      });
+
+      const data = response.data;
+      if (data.success) {
+        console.log("After Send", data.savedMessage);
+        /*   let sendSocket = data.savedMessage;
+        socket.emit("send-message", {
+          sendSocket,
+        }); */
+      } else {
+        console.error("Error sending message:", data.error);
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+
+    setMessage("");
+  };
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get(
+          `/api/directMessage/getAll/${session.user.id}`
+        );
+        const data = response.data;
+
+        if (data.success) {
+          setReceiver(data.messages);
+        } else {
+          console.error("Error fetching messages:", data.error);
+        }
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+
+    fetchMessages();
+  }, [session.user.id]);
+
+  /*   const handleReceiverClick = (username) => {
     const selectedReceiver = receiver.find(
-      (contact) => contact.username === username
+      (contact) => contact.receiver.username === username
     );
+    console.log(selectedReceiver);
 
     if (selectedReceiver) {
-      setReceiverProfile(username);
+      setReceiverProfile(selectedReceiver.receiver.username);
 
-      setReceiverMessage(selectedReceiver.message);
+      const messages = selectedReceiver.messages.map(
+        (message) => message.content
+      );
+
+      setMessages(messages);
     }
   };
+ */
+
+  const handleReceiverClick = async (id) => {
+    console.log("clicked", id);
+    const selectedReceiver = receiver.find(
+      (contact) => contact.receiver._id || contact.sender._id === id
+    );
+    setCurrentMessages(selectedReceiver);
+    console.log(currentMessages);
+
+    await fetchReceiverUser(id);
+    /*  if (selectedReceiver) {
+      setReceiverProfile(selectedReceiver.receiver.username);
+
+      const messages = selectedReceiver.messages.map(
+        (message) => message.content
+      );
+
+      setMessages(messages);
+    } */
+  };
+  /* 
+  const currentUserId = session.user.id;
+
+  const isCurrentUserSender =
+    directMessage.sender._id.toString() === currentUserId;
+  const isCurrentUserReceiver =
+    directMessage.receiver._id.toString() === currentUserId;
+
+  const isCurrentUserSenderOrReceiver =
+    directMessage.messages.some(
+      (message) =>
+        message.role === "sender" && message.sender.toString() === currentUserId
+    ) ||
+    directMessage.messages.some(
+      (message) =>
+        message.role === "receiver" &&
+        message.receiver.toString() === currentUserId
+    ); */
 
   return (
     <>
@@ -92,17 +183,55 @@ export default function DirectMessage() {
                 className="flex flex-col h-[670px] absolute bottom-0 overflow-auto w-full custom-scrollbar"
                 id="style-3"
               >
-                {receiver.map((contact, index) => (
-                  <div
-                    onClick={() => handleReceiverClick(contact.username)}
-                    key={index}
-                  >
-                    <ContactField
-                      username={contact.username}
-                      message={contact.message}
-                    />
-                  </div>
-                ))}
+                {receiver.map((message, index) => {
+                  // Menentukan apakah pengguna saat ini adalah sender atau receiver
+                  const isCurrentUserSender =
+                    message.sender._id.toString() === session.user.id;
+                  const isCurrentUserReceiver =
+                    message.receiver._id.toString() === session.user.id;
+
+                  // Menentukan apakah data harus ditampilkan
+                  const shouldDisplayData =
+                    (isCurrentUserSender || isCurrentUserReceiver) &&
+                    (isCurrentUserSender
+                      ? message.receiver._id.toString() !== session.user.id
+                      : message.sender._id.toString() !== session.user.id);
+
+                  // Jika data harus ditampilkan, lakukan iterasi dan tampilkan
+                  if (shouldDisplayData) {
+                    return (
+                      <div
+                        onClick={() =>
+                          handleReceiverClick(
+                            isCurrentUserSender
+                              ? message.receiver._id
+                              : message.sender._id
+                          )
+                        }
+                        key={index}
+                      >
+                        <ContactField
+                          username={
+                            isCurrentUserSender
+                              ? message.receiver.username
+                              : message.sender.username
+                          }
+                          message={
+                            message.messages.length > 0
+                              ? message.messages[message.messages.length - 1]
+                                  .content
+                              : "No message"
+                          }
+                          profileImage={
+                            isCurrentUserSender
+                              ? message.receiver.profileImage
+                              : message.sender.profileImage
+                          }
+                        />
+                      </div>
+                    );
+                  }
+                })}
               </div>
             </div>
           </div>
@@ -117,7 +246,19 @@ export default function DirectMessage() {
               </div>
               {/* Grup Members */}
               <div className="py-2 flex flex-col text-white">
-                <div className="font-bold text-lg">{receiverProfile}</div>
+                {receiverUser &&
+                receiverUser.user &&
+                receiverUser.user.username ? (
+                  <div className="font-bold text-lg">
+                    {receiverUser.user.username}
+                  </div>
+                ) : (
+                  <div className="font-bold text-lg">{receiverProfile}</div>
+                )}
+
+                {/*   <div className="font-bold text-lg">
+                  {receiverProfile.username}
+                </div> */}
                 <div className="font-sm text-sm">Online</div>
               </div>
             </div>
@@ -132,24 +273,47 @@ export default function DirectMessage() {
                   backgroundPosition: "center",
                 }}
               >
-                <BubbleChat
-                  key={1}
-                  id={1}
-                  name={"You"}
-                  message={receiverMessage}
-                  time={19}
-                  isSender={false}
-                  profileImage={
-                    "https://www.w3schools.com/howto/img_avatar.png"
-                  }
-                />
+                {/*   {messages.map((messageObj, index) => (
+                  <div key={index}>
+                    {messageObj.messages.map((message, msgIndex) => (
+                      <BubbleChat
+                        key={msgIndex}
+                        id={message._id}
+                        name={messageObj.receiver.username}
+                        message={message.content}
+                        time={message.createdAt}
+                        isSender={true}
+                        profileImage={messageObj.receiver.profileImage}
+                      />
+                    ))}
+                  </div>
+                ))} */}
+                {currentMessages &&
+                currentMessages.messages &&
+                currentMessages.messages.length > 0 ? (
+                  currentMessages.messages.map((message, index) => (
+                    <BubbleChat
+                      key={index}
+                      id={message._id}
+                      name={"ini nama"}
+                      message={message.content}
+                      time={message.createdAt}
+                      isSender={true} // Set isSender to true if the current user is the sender
+                      profileImage={
+                        "https://www.w3schools.com/howto/img_avatar.png"
+                      }
+                    />
+                  ))
+                ) : (
+                  <p>Tidak ada pesan.</p>
+                )}
               </div>
               {/* Field Typing */}
               <div className="absolute bottom-0 w-full -ml-5">
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    /* sendMessage(); */
+                    sendMessage();
                   }}
                 >
                   <div className="flex items-center px-3 py-2 rounded-b-lg bg-[#906BFA]">
@@ -197,8 +361,8 @@ export default function DirectMessage() {
                     <textarea
                       id="chat"
                       rows={1}
-                      /* value={message}
-                      onChange={(e) => setMessage(e.target.value)} */
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
                       className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg shadow"
                       placeholder="Ketik pesan..."
                     />

@@ -85,7 +85,12 @@ export default function UserProfileModal({
           <h3 className="text-md font-semibold">User Details</h3>
           <p className="mt-2 text-sm text-gray-500">Username: {username}</p>
           <p className="mt-1 text-sm text-gray-500">Phone: {user.phone}</p>
-          <p className="mt-1 text-sm text-gray-500">Website: {user.website}</p>
+          {receiverUser && receiverUser.user && receiverUser.user._id && (
+            <p className="mt-1 text-sm text-gray-500">
+              Website: {receiverUser.user._id}
+            </p>
+          )}
+          {/* <p className="mt-1 text-sm text-gray-500">Website: {user.website}</p> */}
         </div>
         <div className="flex p-5 gap-10 justify-center items-center">
           <div

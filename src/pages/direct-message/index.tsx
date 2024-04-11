@@ -93,12 +93,17 @@ export default function DirectMessage() {
     }
   };
  */
+  console.log(receiver);
 
   const handleReceiverClick = async (id) => {
     console.log("clicked", id);
-    const selectedReceiver = receiver.find(
-      (contact) => contact.receiver._id || contact.sender._id === id
-    );
+    const selectedReceiver = receiver.find((contact) => {
+      return (
+        (contact.receiver._id === id || contact.sender._id === id) && // Cek apakah id adalah penerima atau pengirim
+        (contact.sender._id === session.user.id ||
+          contact.receiver._id === session.user.id) // Cek apakah pengguna saat ini adalah pengirim atau penerima
+      );
+    });
     setCurrentMessages(selectedReceiver);
     console.log(currentMessages);
 
@@ -239,29 +244,28 @@ export default function DirectMessage() {
           <div className="max-w-xl w-full rounded-lg shadow-lg h-[735px] relative">
             <div className="flex bg-[#906bfa] rounded-t-lg drop-shadow-lg z-[99]">
               {/* Grup Icon */}
-              <div className="flex justify-center items-center px-4">
-                <Avatar
-                  image={"https://www.w3schools.com/howto/img_avatar.png"}
-                />
-              </div>
-              {/* Grup Members */}
-              <div className="py-2 flex flex-col text-white">
-                {receiverUser &&
-                receiverUser.user &&
-                receiverUser.user.username ? (
-                  <div className="font-bold text-lg">
-                    {receiverUser.user.username}
+              {receiverUser &&
+              receiverUser.user &&
+              receiverUser.user.username ? (
+                <>
+                  <div className="flex justify-center items-center px-4">
+                    <Avatar image={receiverUser.user.profileImage} />
                   </div>
-                ) : (
-                  <div className="font-bold text-lg">{receiverProfile}</div>
-                )}
-
-                {/*   <div className="font-bold text-lg">
-                  {receiverProfile.username}
-                </div> */}
-                <div className="font-sm text-sm">Online</div>
-              </div>
+                  <div className="py-2 flex flex-col text-white">
+                    <div className="font-bold text-lg">
+                      {receiverUser.user.username
+                        ? receiverUser.user.username
+                        : receiverProfile}
+                    </div>
+                    <div className="font-sm text-sm">Online</div>
+                  </div>
+                </>
+              ) : (
+                // Grup Members
+                <div></div>
+              )}
             </div>
+
             <div className="flex flex-col px-5 ">
               <div
                 className="flex flex-col -ml-5 px-5 w-70 h-[615px] absolute bottom-4 mb-10 overflow-auto w-full custom-scrollbar"
@@ -273,21 +277,6 @@ export default function DirectMessage() {
                   backgroundPosition: "center",
                 }}
               >
-                {/*   {messages.map((messageObj, index) => (
-                  <div key={index}>
-                    {messageObj.messages.map((message, msgIndex) => (
-                      <BubbleChat
-                        key={msgIndex}
-                        id={message._id}
-                        name={messageObj.receiver.username}
-                        message={message.content}
-                        time={message.createdAt}
-                        isSender={true}
-                        profileImage={messageObj.receiver.profileImage}
-                      />
-                    ))}
-                  </div>
-                ))} */}
                 {currentMessages &&
                 currentMessages.messages &&
                 currentMessages.messages.length > 0 ? (
@@ -305,7 +294,7 @@ export default function DirectMessage() {
                     />
                   ))
                 ) : (
-                  <p>Tidak ada pesan.</p>
+                  <p className="text-center">Tidak ada pesan.</p>
                 )}
               </div>
               {/* Field Typing */}

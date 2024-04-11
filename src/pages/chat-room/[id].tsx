@@ -166,6 +166,7 @@ export default function ChatRoom() {
             username={profileUserModal.user.username}
             email={profileUserModal.user.email}
             profileImage={profileUserModal.user.profileImage}
+            userId={profileUserModal.user._id}
           />
         ) : null}
 

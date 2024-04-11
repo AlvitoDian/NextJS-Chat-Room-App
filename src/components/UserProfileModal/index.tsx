@@ -2,27 +2,29 @@ import React, { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useReceiver } from "@/contexts/ReceiverContext";
 
 export default function UserProfileModal({
   openModalUser,
   username,
   email,
   profileImage,
+  userId,
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const { receiverUser, fetchReceiverUser } = useReceiver();
 
   useEffect(() => {
-    // Function to handle click outside the modal
     function handleClickOutside(event) {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         openModalUser(false);
       }
     }
 
-    // Adding event listener when component mounts
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Removing event listener when component unmounts
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -35,6 +37,15 @@ export default function UserProfileModal({
     phone: "123-456-7890",
     website: "example.com",
     avatar: "https://via.placeholder.com/150",
+  };
+
+  const handleDirectMessageClick = async () => {
+    try {
+      await fetchReceiverUser(userId);
+      router.push("/direct-message");
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
   };
 
   return (
@@ -77,15 +88,15 @@ export default function UserProfileModal({
           <p className="mt-1 text-sm text-gray-500">Website: {user.website}</p>
         </div>
         <div className="flex p-5 gap-10 justify-center items-center">
-          <Link
-            href={"#"}
-            className="pt-2 text-[#6F3EFC] hover:text-[#8860fc] flex flex-col justify-center items-center"
+          <div
+            onClick={handleDirectMessageClick}
+            className="pt-2 text-[#6F3EFC] hover:text-[#8860fc] flex flex-col justify-center items-center cursor-pointer"
           >
             <FontAwesomeIcon className="text-[20px]" icon={faMessage} />
             <span className="text-[11px] pt-2 font-medium text-gray-500">
               Direct Message
             </span>
-          </Link>
+          </div>
           <Link
             href={"#"}
             className="pt-2 text-[#6F3EFC] hover:text-[#8860fc] flex flex-col justify-center items-center"

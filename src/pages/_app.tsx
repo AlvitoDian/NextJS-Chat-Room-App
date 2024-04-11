@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import AppMain from "@/layouts/AppMain";
 import { SessionProvider } from "next-auth/react";
+import { ReceiverProvider } from "@/contexts/ReceiverContext";
 
 export default function App({
   Component,
@@ -10,7 +11,9 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <AppMain>
-        <Component {...pageProps} />
+        <ReceiverProvider>
+          <Component {...pageProps} />
+        </ReceiverProvider>
       </AppMain>
     </SessionProvider>
   );

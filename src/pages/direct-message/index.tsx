@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
+/* import { useReceiver } from "@/contexts/ReceiverContext"; */
 import ContactField from "@/components/ContactField";
 import Avatar from "@/components/Avatar";
 import BubbleChat from "@/components/BubbleChat";
 import Head from "next/head";
+import { useReceiver } from "@/contexts/ReceiverContext";
 
 export default function DirectMessage() {
+  const { receiverUser, fetchReceiverUser } = useReceiver();
+
   //? Contact Field
   const [sender, setSender] = useState("User Saat ini");
   const [receiver, setReceiver] = useState([
@@ -21,7 +25,9 @@ export default function DirectMessage() {
   ]);
 
   //? Chat Field
-  const [receiverProfile, setReceiverProfile] = useState("");
+  const [receiverProfile, setReceiverProfile] = useState(
+    receiverUser.user.username
+  );
   const [receiverMessage, setReceiverMessage] = useState("");
   const handleReceiverClick = (username) => {
     const selectedReceiver = receiver.find(

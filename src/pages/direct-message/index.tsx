@@ -76,10 +76,7 @@ export default function DirectMessage() {
     fetchMessages();
   }, [session.user.id]);
 
-  console.log(receiver);
-
   const handleReceiverClick = async (id) => {
-    console.log("clicked", id);
     const selectedReceiver = receiver.find((contact) => {
       return (
         (contact.receiver._id === id || contact.sender._id === id) &&
@@ -88,7 +85,6 @@ export default function DirectMessage() {
       );
     });
     setCurrentMessages(selectedReceiver);
-    console.log(currentMessages);
 
     await fetchReceiverUser(id);
   };
@@ -205,30 +201,25 @@ export default function DirectMessage() {
             </div>
           </div>
           {/* Chat Field */}
-          {currentMessages ? (
+          {currentMessages || receiverUser ? (
             <div className="max-w-xl w-full rounded-lg shadow-lg h-[735px] relative">
               <div className="flex bg-[#906bfa] rounded-t-lg drop-shadow-lg z-[99]">
                 {/* Grup Icon */}
                 {receiverUser &&
-                receiverUser.user &&
-                receiverUser.user.username ? (
-                  <>
-                    <div className="flex justify-center items-center px-4">
-                      <Avatar image={receiverUser.user.profileImage} />
-                    </div>
-                    <div className="py-2 flex flex-col text-white">
-                      <div className="font-bold text-lg">
-                        {receiverUser.user.username
-                          ? receiverUser.user.username
-                          : receiverProfile}
+                  receiverUser.user &&
+                  receiverUser.user.username && (
+                    <>
+                      <div className="flex justify-center items-center px-4">
+                        <Avatar image={receiverUser.user.profileImage} />
                       </div>
-                      <div className="font-sm text-sm">Online</div>
-                    </div>
-                  </>
-                ) : (
-                  // Grup Members
-                  <div></div>
-                )}
+                      <div className="py-2 flex flex-col text-white">
+                        <div className="font-bold text-lg">
+                          {receiverUser.user.username}
+                        </div>
+                        <div className="font-sm text-sm">Online</div>
+                      </div>
+                    </>
+                  )}
               </div>
 
               <div className="flex flex-col px-5 ">
@@ -243,8 +234,8 @@ export default function DirectMessage() {
                   }}
                 >
                   {currentMessages &&
-                  currentMessages.messages &&
-                  currentMessages.messages.length > 0 ? (
+                    currentMessages.messages &&
+                    currentMessages.messages.length > 0 &&
                     currentMessages.messages.map((message, index) => {
                       console.log(currentMessages);
                       return (
@@ -269,10 +260,7 @@ export default function DirectMessage() {
                           }
                         />
                       );
-                    })
-                  ) : (
-                    <p className="text-center">Tidak ada pesan.</p>
-                  )}
+                    })}
                 </div>
                 {/* Field Typing */}
                 <div className="absolute bottom-0 w-full -ml-5">
@@ -353,7 +341,6 @@ export default function DirectMessage() {
               </div>
             </div>
           ) : (
-            // Tampilkan loading jika salah satu kondisi tidak terpenuhi
             <div className="max-w-xl w-full rounded-lg shadow-lg h-[735px] flex flex-col justify-center items-center">
               <span className="self-center text-2xl font-bold whitespace-nowrap text-[#6F3EFC]">
                 Nimbrunk

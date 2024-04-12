@@ -41,7 +41,7 @@ export default function BubbleChatDirectMessage({
       }`}
     >
       <Image
-        className="w-8 h-8 rounded-full cursor-pointer"
+        className="w-8 h-8 rounded-full"
         src={profileImage}
         alt="Jese image"
         width={100}
@@ -49,7 +49,7 @@ export default function BubbleChatDirectMessage({
       />
       <div className="flex flex-col gap-1 w-full max-w-[320px]">
         <div
-          className={`flex items-center space-x-2 rtl:space-x-reverse cursor-pointer ${
+          className={`flex items-center space-x-2 rtl:space-x-reverse ${
             isSender ? "flex-row-reverse" : ""
           }`}
         >

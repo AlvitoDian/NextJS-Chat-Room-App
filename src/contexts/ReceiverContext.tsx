@@ -19,7 +19,7 @@ const ReceiverContext = createContext<ReceiverContextType | undefined>(
 export const ReceiverProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [receiverUser, setReceiverUser] = useState<any>("Kwonsol");
+  const [receiverUser, setReceiverUser] = useState<any>("");
 
   const fetchReceiverUser = async (id: any) => {
     try {
@@ -28,7 +28,6 @@ export const ReceiverProvider: React.FC<{ children: ReactNode }> = ({
         throw new Error("Failed to fetch user");
       }
       const userData = response.data;
-      console.log("from context", userData);
       setReceiverUser(userData);
     } catch (error) {
       console.error("Error fetching user:", error);

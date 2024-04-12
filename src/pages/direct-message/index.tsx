@@ -257,16 +257,14 @@ export default function DirectMessage() {
                           message.role
                         }
                         name={
-                          getMessageRole(currentMessages, session.user.id) ===
-                          message.role
-                            ? currentMessages.receiver.username // Menggunakan profileImage sender jika isSender true
-                            : currentMessages.sender.username
+                          message.role === "sender"
+                            ? currentMessages.sender.username
+                            : currentMessages.receiver.username
                         }
                         profileImage={
-                          getMessageRole(currentMessages, session.user.id) ===
-                          message.role
-                            ? currentMessages.receiver.profileImage // Menggunakan profileImage sender jika isSender true
-                            : currentMessages.sender.profileImage // Atau gunakan url default jika isSender false
+                          message.role === "sender"
+                            ? currentMessages.sender.profileImage
+                            : currentMessages.receiver.profileImage
                         }
                       />
                     );

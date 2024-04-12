@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-/* import { useReceiver } from "@/contexts/ReceiverContext"; */
+import Image from "next/image";
 import ContactField from "@/components/ContactField";
 import Avatar from "@/components/Avatar";
-import BubbleChat from "@/components/BubbleChat";
 import Head from "next/head";
 import { useReceiver } from "@/contexts/ReceiverContext";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import BubbleChatDirectMessage from "@/components/BubbleChatDirectMessage";
 
 export default function DirectMessage() {
   const { receiverUser, fetchReceiverUser } = useReceiver();
@@ -205,152 +205,167 @@ export default function DirectMessage() {
             </div>
           </div>
           {/* Chat Field */}
-          <div className="max-w-xl w-full rounded-lg shadow-lg h-[735px] relative">
-            <div className="flex bg-[#906bfa] rounded-t-lg drop-shadow-lg z-[99]">
-              {/* Grup Icon */}
-              {receiverUser &&
-              receiverUser.user &&
-              receiverUser.user.username ? (
-                <>
-                  <div className="flex justify-center items-center px-4">
-                    <Avatar image={receiverUser.user.profileImage} />
-                  </div>
-                  <div className="py-2 flex flex-col text-white">
-                    <div className="font-bold text-lg">
-                      {receiverUser.user.username
-                        ? receiverUser.user.username
-                        : receiverProfile}
+          {currentMessages ? (
+            <div className="max-w-xl w-full rounded-lg shadow-lg h-[735px] relative">
+              <div className="flex bg-[#906bfa] rounded-t-lg drop-shadow-lg z-[99]">
+                {/* Grup Icon */}
+                {receiverUser &&
+                receiverUser.user &&
+                receiverUser.user.username ? (
+                  <>
+                    <div className="flex justify-center items-center px-4">
+                      <Avatar image={receiverUser.user.profileImage} />
                     </div>
-                    <div className="font-sm text-sm">Online</div>
-                  </div>
-                </>
-              ) : (
-                // Grup Members
-                <div></div>
-              )}
-            </div>
-
-            <div className="flex flex-col px-5 ">
-              <div
-                className="flex flex-col -ml-5 px-5 w-70 h-[615px] absolute bottom-4 mb-10 overflow-auto w-full custom-scrollbar"
-                id="style-3"
-                style={{
-                  backgroundImage: `url('/pattern.png')`,
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "center",
-                }}
-              >
-                {currentMessages &&
-                currentMessages.messages &&
-                currentMessages.messages.length > 0 ? (
-                  currentMessages.messages.map((message, index) => {
-                    console.log(currentMessages);
-                    return (
-                      <BubbleChat
-                        key={index}
-                        id={message._id}
-                        message={message.content}
-                        time={message.createdAt}
-                        isSender={
-                          getMessageRole(currentMessages, session.user.id) ===
-                          message.role
-                        }
-                        name={
-                          message.role === "sender"
-                            ? currentMessages.sender.username
-                            : currentMessages.receiver.username
-                        }
-                        profileImage={
-                          message.role === "sender"
-                            ? currentMessages.sender.profileImage
-                            : currentMessages.receiver.profileImage
-                        }
-                      />
-                    );
-                  })
+                    <div className="py-2 flex flex-col text-white">
+                      <div className="font-bold text-lg">
+                        {receiverUser.user.username
+                          ? receiverUser.user.username
+                          : receiverProfile}
+                      </div>
+                      <div className="font-sm text-sm">Online</div>
+                    </div>
+                  </>
                 ) : (
-                  <p className="text-center">Tidak ada pesan.</p>
+                  // Grup Members
+                  <div></div>
                 )}
               </div>
-              {/* Field Typing */}
-              <div className="absolute bottom-0 w-full -ml-5">
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    sendMessage();
+
+              <div className="flex flex-col px-5 ">
+                <div
+                  className="flex flex-col -ml-5 px-5 w-70 h-[615px] absolute bottom-4 mb-10 overflow-auto w-full custom-scrollbar"
+                  id="style-3"
+                  style={{
+                    backgroundImage: `url('/pattern.png')`,
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center",
                   }}
                 >
-                  <div className="flex items-center px-3 py-2 rounded-b-lg bg-[#906BFA]">
-                    {/*  Button Image */}
-                    <label
-                      htmlFor="image-upload"
-                      className="inline-flex justify-center px-2 text-gray-500 rounded-lg cursor-pointer mr-3"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 20 18"
+                  {currentMessages &&
+                  currentMessages.messages &&
+                  currentMessages.messages.length > 0 ? (
+                    currentMessages.messages.map((message, index) => {
+                      console.log(currentMessages);
+                      return (
+                        <BubbleChatDirectMessage
+                          key={index}
+                          id={message._id}
+                          message={message.content}
+                          time={message.createdAt}
+                          isSender={
+                            getMessageRole(currentMessages, session.user.id) ===
+                            message.role
+                          }
+                          name={
+                            message.role === "sender"
+                              ? currentMessages.sender.username
+                              : currentMessages.receiver.username
+                          }
+                          profileImage={
+                            message.role === "sender"
+                              ? currentMessages.sender.profileImage
+                              : currentMessages.receiver.profileImage
+                          }
+                        />
+                      );
+                    })
+                  ) : (
+                    <p className="text-center">Tidak ada pesan.</p>
+                  )}
+                </div>
+                {/* Field Typing */}
+                <div className="absolute bottom-0 w-full -ml-5">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      sendMessage();
+                    }}
+                  >
+                    <div className="flex items-center px-3 py-2 rounded-b-lg bg-[#906BFA]">
+                      {/*  Button Image */}
+                      <label
+                        htmlFor="image-upload"
+                        className="inline-flex justify-center px-2 text-gray-500 rounded-lg cursor-pointer mr-3"
                       >
-                        <path
-                          fill="white"
-                          d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
-                        />
-                        <path
-                          stroke="white"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M18 1H2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
-                        />
-                        <path
-                          stroke="white"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
-                        />
-                      </svg>
-                      <span className="sr-only">Upload image</span>
-                    </label>
-                    <input
-                      type="file"
-                      id="image-upload"
-                      className="hidden"
-                      accept="image/*"
-                    />
+                        <svg
+                          className="w-5 h-5"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 20 18"
+                        >
+                          <path
+                            fill="white"
+                            d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
+                          />
+                          <path
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M18 1H2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
+                          />
+                          <path
+                            stroke="white"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
+                          />
+                        </svg>
+                        <span className="sr-only">Upload image</span>
+                      </label>
+                      <input
+                        type="file"
+                        id="image-upload"
+                        className="hidden"
+                        accept="image/*"
+                      />
 
-                    {/*  Button Image End */}
-                    <textarea
-                      id="chat"
-                      rows={1}
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg shadow"
-                      placeholder="Ketik pesan..."
-                    />
-                    <button
-                      type="submit"
-                      className="inline-flex justify-center ml-2 p-2 text-blue-600 rounded-full cursor-pointer "
-                    >
-                      <svg
-                        className="w-5 h-5 rotate-90 rtl:-rotate-90 text-[#906BFA]"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="white"
-                        viewBox="0 0 18 20"
+                      {/*  Button Image End */}
+                      <textarea
+                        id="chat"
+                        rows={1}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg shadow"
+                        placeholder="Ketik pesan..."
+                      />
+                      <button
+                        type="submit"
+                        className="inline-flex justify-center ml-2 p-2 text-blue-600 rounded-full cursor-pointer "
                       >
-                        <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
-                      </svg>
-                    </button>
-                  </div>
-                </form>
+                        <svg
+                          className="w-5 h-5 rotate-90 rtl:-rotate-90 text-[#906BFA]"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="white"
+                          viewBox="0 0 18 20"
+                        >
+                          <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+                {/* Field Typing End */}
               </div>
-              {/* Field Typing End */}
             </div>
-          </div>
+          ) : (
+            // Tampilkan loading jika salah satu kondisi tidak terpenuhi
+            <div className="max-w-xl w-full rounded-lg shadow-lg h-[735px] flex flex-col justify-center items-center">
+              <span className="self-center text-2xl font-bold whitespace-nowrap text-[#6F3EFC]">
+                Nimbrunk
+              </span>
+              <Image
+                src="/logo.png"
+                alt="Flowbite Logo"
+                width={60}
+                height={60}
+              />
+            </div>
+          )}
         </div>
       </div>
     </>

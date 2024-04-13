@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import FeatureCard from "../FeatureCard";
+import FeatureCard from "./FeatureCard";
 
 function Feature() {
   // Dummy data

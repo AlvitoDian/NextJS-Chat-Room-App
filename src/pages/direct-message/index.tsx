@@ -7,12 +7,15 @@ import { useReceiver } from "@/contexts/ReceiverContext";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import BubbleChatDirectMessage from "@/components/BubbleChatDirectMessage";
+import io from "socket.io-client";
 
 export default function DirectMessage() {
+  let socket = io();
+
   const { receiverUser, fetchReceiverUser } = useReceiver();
 
   //? Contact Field
-  const [sender, setSender] = useState("User Saat ini");
+  const [sender, setSender] = useState("");
   const [receiver, setReceiver] = useState<any>([]);
 
   //? Session Data
@@ -22,39 +25,9 @@ export default function DirectMessage() {
   const [receiverProfile, setReceiverProfile] = useState(receiverUser.user);
   const [message, setMessage] = useState("");
   const [currentMessages, setCurrentMessages] = useState<any>();
+  const [socketConnected, setSocketConnected] = useState(false);
 
-  //? Function Send Message
-  const sendMessage = async () => {
-    if (message.trim() === "") {
-      return;
-    }
-
-    try {
-      const sender = session.user.id;
-      const receiver = receiverUser.user._id;
-      const response = await axios.post(`/api/directMessage/addMessage`, {
-        content: message,
-        sender: sender,
-        receiver: receiver,
-      });
-
-      const data = response.data;
-      if (data.success) {
-        console.log("After Send", data.savedMessage);
-        /*   let sendSocket = data.savedMessage;
-        socket.emit("send-message", {
-          sendSocket,
-        }); */
-      } else {
-        console.error("Error sending message:", data.error);
-      }
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
-
-    setMessage("");
-  };
-
+  //? Fetch Contact
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -76,17 +49,140 @@ export default function DirectMessage() {
     fetchMessages();
   }, [session.user.id]);
 
+  //? Fetch if Message exist for link Direct Message
+  useEffect(() => {
+    const fetchData = async () => {
+      if (receiverUser && receiver.length > 0) {
+        await handleReceiverClick(receiverUser.user._id);
+      } else {
+        console.log("No message found.");
+      }
+    };
+
+    fetchData();
+  }, [receiver]);
+
+  //? Click contact fetch messages
   const handleReceiverClick = async (id) => {
-    const selectedReceiver = receiver.find((contact) => {
+    let currentMessagesReady = false;
+
+    const selectedReceiver = await receiver.find((contact) => {
       return (
         (contact.receiver._id === id || contact.sender._id === id) &&
         (contact.sender._id === session.user.id ||
           contact.receiver._id === session.user.id)
       );
     });
+
     setCurrentMessages(selectedReceiver);
 
+    currentMessagesReady = true;
+
+    await connectSocketio(receiver);
+
     await fetchReceiverUser(id);
+  };
+
+  //? Connect Socket io
+  const connectSocketio = async (receiver) => {
+    console.log("socket connect", receiver);
+    await fetch("/api/socket");
+
+    receiver.forEach((contact) => {
+      const userRoomId = contact._id;
+      socket.emit("joinDirectMessage", userRoomId);
+
+      socket.on(`receive-message-${userRoomId}`, (data) => {
+        console.log("current messages from client", currentMessages);
+        console.log("realtime from socket", data);
+        if (
+          currentMessages &&
+          currentMessages._id &&
+          data &&
+          data._id &&
+          currentMessages._id === data._id
+        ) {
+          setCurrentMessages((prev) => ({
+            ...prev,
+            ...prev.messages.push(data.messages[data.messages.length - 1]),
+          }));
+        }
+
+        if (
+          currentMessages &&
+          currentMessages._id &&
+          data &&
+          data._id &&
+          currentMessages._id !== data._id
+        ) {
+          setCurrentMessages("");
+        }
+
+        if (!currentMessages) {
+          console.log("this current messages", currentMessages);
+        }
+      });
+
+      /*      socket.on(`receive-message`, (data) => {
+        console.log("realtime from socketio", data);
+         setCurrentMessages((prev) => ({
+          ...prev,
+          ...prev.messages.push(data.messages[data.messages.length - 1]),
+        }));
+
+             setReceiver((prev) => {
+          return prev.map((prevData) => {
+            if (
+              prevData.sender._id === data.sender._id &&
+              prevData.receiver._id === data.receiver._id
+            ) {
+              return data;
+            } else {
+              return prevData;
+            }
+          });
+        });
+      }); */
+    });
+  };
+
+  useEffect(() => {
+    if (!socketConnected && receiver.length > 0) {
+      connectSocketio(receiver);
+      setSocketConnected(true);
+    }
+  }, [socketConnected, receiver]);
+
+  //? Function Send Message
+  const sendMessage = async () => {
+    if (message.trim() === "") {
+      return;
+    }
+
+    try {
+      const sender = session.user.id;
+      const receiver = receiverUser.user._id;
+      const response = await axios.post(`/api/directMessage/addMessage`, {
+        content: message,
+        sender: sender,
+        receiver: receiver,
+      });
+
+      const data = response.data;
+      if (data.success) {
+        let sendSocket = data.savedMessage;
+        console.log("send socket", sendSocket);
+        socket.emit("send-message", {
+          sendSocket,
+        });
+      } else {
+        console.error("Error sending message:", data.error);
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+
+    setMessage("");
   };
 
   const getMessageRole = (currentMessages, sessionUserId) => {
@@ -237,7 +333,7 @@ export default function DirectMessage() {
                     currentMessages.messages &&
                     currentMessages.messages.length > 0 &&
                     currentMessages.messages.map((message, index) => {
-                      console.log(currentMessages);
+                      /*           console.log("clicked current messages", currentMessages); */
                       return (
                         <BubbleChatDirectMessage
                           key={index}

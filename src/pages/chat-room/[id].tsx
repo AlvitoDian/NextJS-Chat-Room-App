@@ -7,7 +7,6 @@ import Avatar from "@/components/Avatar";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import io from "socket.io-client";
-import ContactField from "@/components/ContactField";
 import UserProfileModal from "@/components/UserProfileModal";
 
 export default function ChatRoom() {
@@ -23,14 +22,6 @@ export default function ChatRoom() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [socketConnected, setSocketConnected] = useState(false);
-
-  const openModal = () => {
-    setModalUserIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalUserIsOpen(false);
-  };
 
   //? Fetch room details on page load
   useEffect(() => {
@@ -72,8 +63,17 @@ export default function ChatRoom() {
   }, [socketConnected]);
 
   //? Connect Socket io
+  /*   const connectSocketio = async () => {
+    await fetch("/api/socket");
+
+    socket.on("receive-message", (data) => {
+      setMessages((pre) => [...pre, data]);
+    });
+  }; */
   const connectSocketio = async () => {
     await fetch("/api/socket");
+
+    socket.emit("joinRoom", id);
 
     socket.on("receive-message", (data) => {
       setMessages((pre) => [...pre, data]);
@@ -115,7 +115,6 @@ export default function ChatRoom() {
 
       const data = response.data;
       if (data.success) {
-        console.log("After Send", data.savedMessage);
         let sendSocket = data.savedMessage;
         socket.emit("send-message", {
           sendSocket,

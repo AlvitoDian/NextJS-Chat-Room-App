@@ -35,7 +35,6 @@ export default async function handler(
           receiver: receiverUser._id,
           messages: [{ content, createdAt: new Date(), role: "sender" }], // Atur peran pengirim
         });
-        console.log("not exist", directMessage);
       } else {
         // Periksa apakah pengguna saat ini adalah pengirim atau penerima
         const roleCurrent =
@@ -47,7 +46,6 @@ export default async function handler(
           createdAt: new Date(),
           role: roleCurrent,
         });
-        console.log("exist", directMessage);
       }
 
       // Simpan pesan langsung

@@ -27,6 +27,13 @@ export default function DirectMessage() {
   const [currentMessages, setCurrentMessages] = useState<any>();
   const [socketConnected, setSocketConnected] = useState(false);
 
+  useEffect(() => {
+    if (!socketConnected && receiver.length > 0) {
+      connectSocketio(receiver);
+      setSocketConnected(true);
+    }
+  }, [socketConnected, receiver]);
+
   //? Fetch Contact
   useEffect(() => {
     const fetchMessages = async () => {
@@ -62,27 +69,6 @@ export default function DirectMessage() {
     fetchData();
   }, [receiver]);
 
-  //? Click contact fetch messages
-  const handleReceiverClick = async (id) => {
-    let currentMessagesReady = false;
-
-    const selectedReceiver = await receiver.find((contact) => {
-      return (
-        (contact.receiver._id === id || contact.sender._id === id) &&
-        (contact.sender._id === session.user.id ||
-          contact.receiver._id === session.user.id)
-      );
-    });
-
-    setCurrentMessages(selectedReceiver);
-
-    currentMessagesReady = true;
-
-    await connectSocketio(receiver);
-
-    await fetchReceiverUser(id);
-  };
-
   //? Connect Socket io
   const connectSocketio = async (receiver) => {
     console.log("socket connect", receiver);
@@ -115,43 +101,39 @@ export default function DirectMessage() {
           data._id &&
           currentMessages._id !== data._id
         ) {
-          setCurrentMessages("");
+          setCurrentMessages((prev) => ({
+            ...prev,
+          }));
         }
 
         if (!currentMessages) {
           console.log("this current messages", currentMessages);
         }
       });
-
-      /*      socket.on(`receive-message`, (data) => {
-        console.log("realtime from socketio", data);
-         setCurrentMessages((prev) => ({
-          ...prev,
-          ...prev.messages.push(data.messages[data.messages.length - 1]),
-        }));
-
-             setReceiver((prev) => {
-          return prev.map((prevData) => {
-            if (
-              prevData.sender._id === data.sender._id &&
-              prevData.receiver._id === data.receiver._id
-            ) {
-              return data;
-            } else {
-              return prevData;
-            }
-          });
-        });
-      }); */
     });
   };
 
-  useEffect(() => {
-    if (!socketConnected && receiver.length > 0) {
-      connectSocketio(receiver);
-      setSocketConnected(true);
-    }
-  }, [socketConnected, receiver]);
+  //? Click contact fetch messages
+  const handleReceiverClick = async (id) => {
+    let currentMessagesReady = false;
+
+    const selectedReceiver = await receiver.find((contact) => {
+      return (
+        (contact.receiver._id === id || contact.sender._id === id) &&
+        (contact.sender._id === session.user.id ||
+          contact.receiver._id === session.user.id)
+      );
+    });
+
+    currentMessagesReady = true;
+
+    await connectSocketio(receiver);
+
+    setCurrentMessages("");
+    setCurrentMessages(selectedReceiver);
+
+    await fetchReceiverUser(id);
+  };
 
   //? Function Send Message
   const sendMessage = async () => {
@@ -185,6 +167,7 @@ export default function DirectMessage() {
     setMessage("");
   };
 
+  //? Function handle role message
   const getMessageRole = (currentMessages, sessionUserId) => {
     if (currentMessages.receiver._id === sessionUserId) {
       return "receiver";

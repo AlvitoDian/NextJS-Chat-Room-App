@@ -9,7 +9,9 @@ import axios from "axios";
 
 interface ReceiverContextType {
   receiverUser: any;
+  conversation: any;
   fetchReceiverUser: (userId: any) => void;
+  fetchConversation: (userId: any, receiver: any, sessionUserId: any) => void;
 }
 
 const ReceiverContext = createContext<ReceiverContextType | undefined>(
@@ -20,7 +22,9 @@ export const ReceiverProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [receiverUser, setReceiverUser] = useState<any>("");
+  const [conversation, setConversation] = useState<any>("");
 
+  //? Fetch Contact
   const fetchReceiverUser = async (id: any) => {
     try {
       const response = await axios.get(`/api/users/detailUser/${id}`);
@@ -34,8 +38,36 @@ export const ReceiverProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
+  //? Fetch Conversation
+  const fetchConversation = async (
+    id: any,
+    receiver: any,
+    sessionUserId: any
+  ) => {
+    try {
+      const selectedReceiver = await receiver.find((contact) => {
+        return (
+          (contact.receiver._id === id || contact.sender._id === id) &&
+          (contact.sender._id === sessionUserId ||
+            contact.receiver._id === sessionUserId)
+        );
+      });
+
+      setConversation(selectedReceiver);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
+
   return (
-    <ReceiverContext.Provider value={{ receiverUser, fetchReceiverUser }}>
+    <ReceiverContext.Provider
+      value={{
+        receiverUser,
+        conversation,
+        fetchReceiverUser,
+        fetchConversation,
+      }}
+    >
       {children}
     </ReceiverContext.Provider>
   );

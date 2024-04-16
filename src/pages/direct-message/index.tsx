@@ -27,21 +27,16 @@ export default function DirectMessage() {
   const [message, setMessage] = useState("");
   const [currentMessages, setCurrentMessages] = useState<any>();
   const [socketConnected, setSocketConnected] = useState(false);
+  const [isNewMember, setIsNewMember] = useState(false);
 
+  //? Update Conversation
   useEffect(() => {
     setCurrentMessages(conversation);
   }, [conversation]);
 
-  useEffect(() => {
-    if (!socketConnected && receiver.length > 0) {
-      connectSocketio(receiver);
-      setSocketConnected(true);
-    }
-  }, [socketConnected, receiver]);
-
   //? Fetch Contact
   useEffect(() => {
-    const fetchMessages = async () => {
+    const fetchContact = async () => {
       try {
         const response = await axios.get(
           `/api/directMessage/getAll/${session.user.id}`
@@ -58,8 +53,23 @@ export default function DirectMessage() {
       }
     };
 
-    fetchMessages();
-  }, [session.user.id]);
+    fetchContact();
+  }, [session.user.id, isNewMember]);
+
+  //? Connect Socket io
+  useEffect(() => {
+    if (!socketConnected && receiver.length > 0) {
+      connectSocketio(receiver);
+      setSocketConnected(true);
+    }
+  }, [socketConnected, receiver]);
+
+  useEffect(() => {
+    if (isNewMember && receiver.length > 0) {
+      connectSocketio(receiver);
+      setIsNewMember(false);
+    }
+  }, [receiver]);
 
   //? Fetch if Message exist for link Direct Message
   useEffect(() => {
@@ -78,6 +88,7 @@ export default function DirectMessage() {
   const handleReceiverClick = async (id) => {
     fetchReceiverUser(id);
     fetchConversation(id, receiver, session.user.id);
+
     /*     let currentMessagesReady = false;
 
     const selectedReceiver = await receiver.find((contact) => {
@@ -108,13 +119,13 @@ export default function DirectMessage() {
       socket.emit("joinDirectMessage", userRoomId);
 
       socket.on(`receive-message`, (data) => {
+        updateReceiver(data);
         /*   console.log("data dari socket", data);
         console.log(
           "current message setelah receive-message",
           currentMessages && currentMessages
         ); */
 
-        updateCurrentMessages(data);
         /*   if (currentMessages && currentMessages._id == data._id) {
           console.log("equal!");
         } else {
@@ -150,46 +161,17 @@ export default function DirectMessage() {
     });
   };
 
-  const updateCurrentMessages = async (data) => {
-    try {
-      console.log("data dari socket ", data);
-      const findReceiver = receiver.find((r) => r._id === data._id);
-      console.log("apakah ketemu ?", findReceiver);
-      updateReceiver(data);
-
-      const id = "661b6f2ae32984ab80689531";
-      const isTrue = id == data._id;
-      console.log("isTrue", isTrue);
-      /*  if (isTrue) {
-        setCurrentMessages((prev) => ({
-          ...prev,
-          ...prev.messages.push(data.messages[data.messages.length - 1]),
-        }));
-      } else {
-        console.log("not amigo!");
-      } */
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const updateReceiver = async (data) => {
     const updatedReceivers = receiver.map((contact) => {
       if (contact._id === data._id) {
-        // Lakukan sesuatu dengan contact yang sesuai
         contact.messages.push(data.messages[data.messages.length - 1]);
-        // Return contact yang sama karena tidak ada perubahan
       }
-      return contact; // Kembalikan data yang tidak berubah
+      return contact;
     });
 
-    // Tunggu hingga updatedReceivers selesai
     await Promise.all(updatedReceivers);
 
-    // Setelah semua operasi selesai, lakukan setReceiver
     setReceiver(updatedReceivers);
-    console.log("updatedReceivers", updatedReceivers);
-    console.log("receiver", receiver);
   };
 
   //? Function Send Message
@@ -199,12 +181,12 @@ export default function DirectMessage() {
     }
 
     try {
-      const sender = session.user.id;
-      const receiver = receiverUser.user._id;
+      const senderId = session.user.id;
+      const receiverId = receiverUser.user._id;
       const response = await axios.post(`/api/directMessage/addMessage`, {
         content: message,
-        sender: sender,
-        receiver: receiver,
+        sender: senderId,
+        receiver: receiverId,
       });
 
       const data = response.data;
@@ -214,6 +196,18 @@ export default function DirectMessage() {
         socket.emit("send-message", {
           sendSocket,
         });
+
+        //? Check is New Contact
+        const isContactNew = receiver.some(
+          (contact) =>
+            contact.sender._id === receiverUser.user._id ||
+            contact.receiver._id === receiverUser.user._id
+        );
+        if (!isContactNew) {
+          setIsNewMember(true);
+        } else {
+          console.log("Receiver sudah ada");
+        }
       } else {
         console.error("Error sending message:", data.error);
       }
@@ -285,7 +279,6 @@ export default function DirectMessage() {
                 id="style-3"
               >
                 {receiver.map((message, index) => {
-                  console.log("on loop receiver", message);
                   // Menentukan apakah pengguna saat ini adalah sender atau receiver
                   const isCurrentUserSender =
                     message.sender._id.toString() === session.user.id;

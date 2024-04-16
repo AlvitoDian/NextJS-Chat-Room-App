@@ -18,16 +18,15 @@ const directMessageSchema = new Schema(
       {
         content: {
           type: String,
-          required: true,
+          /*      required: true, */
         },
         createdAt: {
           type: Date,
           default: Date.now,
         },
         role: {
-          // Menambah properti role untuk menandakan peran pengguna dalam pesan
-          type: String, // Nilai yang diperbolehkan: sender atau receiver
-          required: true,
+          type: String,
+          /*      required: true, */
         },
       },
     ],

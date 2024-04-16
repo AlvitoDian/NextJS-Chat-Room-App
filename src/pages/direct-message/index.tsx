@@ -28,6 +28,7 @@ export default function DirectMessage() {
   const [currentMessages, setCurrentMessages] = useState<any>();
   const [socketConnected, setSocketConnected] = useState(false);
   const [isNewMember, setIsNewMember] = useState(false);
+  const [contactLoaded, setContactLoaded] = useState(false);
 
   //? Update Conversation
   useEffect(() => {
@@ -45,6 +46,7 @@ export default function DirectMessage() {
 
         if (data.success) {
           setReceiver(data.messages);
+          setContactLoaded(true);
         } else {
           console.error("Error fetching messages:", data.error);
         }
@@ -58,21 +60,21 @@ export default function DirectMessage() {
 
   //? Connect Socket io
   useEffect(() => {
-    if (!socketConnected && receiver.length > 0) {
+    if (!socketConnected && contactLoaded) {
+      console.log("Connecting to socket...");
       connectSocketio(receiver);
       setSocketConnected(true);
     }
-  }, [socketConnected, receiver]);
+  }, [socketConnected, contactLoaded, receiver]);
 
-  useEffect(() => {
+  /*  useEffect(() => {
     if (isNewMember && receiver.length > 0) {
       connectSocketio(receiver);
-      setIsNewMember(false);
     }
-  }, [receiver]);
+  }, [receiver]); */
 
   //? Fetch if Message exist for link Direct Message
-  useEffect(() => {
+  /*  useEffect(() => {
     const fetchData = async () => {
       if (receiverUser && receiver.length > 0) {
         await handleReceiverClick(receiverUser.user._id);
@@ -82,35 +84,16 @@ export default function DirectMessage() {
     };
 
     fetchData();
-  }, [receiver]);
+  }, [receiver]); */
 
   //? Click contact fetch messages
   const handleReceiverClick = async (id) => {
     fetchReceiverUser(id);
     fetchConversation(id, receiver, session.user.id);
-
-    /*     let currentMessagesReady = false;
-
-    const selectedReceiver = await receiver.find((contact) => {
-      return (
-        (contact.receiver._id === id || contact.sender._id === id) &&
-        (contact.sender._id === session.user.id ||
-          contact.receiver._id === session.user.id)
-      );
-    });
-
-    currentMessagesReady = true;
-
-    setCurrentMessages("");
-    setCurrentMessages(selectedReceiver);
-
-    await fetchReceiverUser(id);
-
-    console.log("current msg after switch contact", currentMessages); */
   };
 
   //? Connect Socket io
-  const connectSocketio = async (receiver) => {
+  /*   const connectSocketio = async (receiver) => {
     console.log("socket connect", receiver);
     await fetch("/api/socket");
 
@@ -120,48 +103,58 @@ export default function DirectMessage() {
 
       socket.on(`receive-message`, (data) => {
         updateReceiver(data);
-        /*   console.log("data dari socket", data);
-        console.log(
-          "current message setelah receive-message",
-          currentMessages && currentMessages
-        ); */
-
-        /*   if (currentMessages && currentMessages._id == data._id) {
-          console.log("equal!");
-        } else {
-          console.log("not equal!");
-        } */
       });
-
-      /*  socket.on(`receive-message-${userRoomId}`, (data) => {
-        console.log("receiver from roomid", userRoomId);
-        console.log(
-          "current messages from client",
-          currentMessages && currentMessages._id
-        );
-        console.log("realtime from socket", data._id);
-
-        if (currentMessages && currentMessages._id === data && data._id) {
-          console.log("equal chat room");
-          setCurrentMessages((prev) => ({
-            ...prev,
-            ...prev.messages.push(data.messages[data.messages.length - 1]),
-          }));
-        } else {
-          console.log("not equal chat room");
-          setCurrentMessages((prev) => ({
-            ...prev,
-          }));
-        }
-
-        if (!currentMessages) {
-          console.log("this current messages", currentMessages);
-        }
-      }); */
     });
+  }; */
+
+  const connectSocketio = async (receiver) => {
+    await fetch("/api/socket");
+
+    const currentUserId = session.user.id;
+
+    let listSocketConnect = [currentUserId];
+    console.log(receiver, "receiver in socket");
+
+    receiver.forEach((contact) => {
+      if (contact.sender._id !== currentUserId) {
+        listSocketConnect.push(contact.sender._id);
+      }
+      if (contact.receiver._id !== currentUserId) {
+        listSocketConnect.push(contact.receiver._id);
+      }
+    });
+
+    //? Loop connect socket
+    /* listSocketConnect.forEach((listSocket) => {
+      socket.emit("joinDirectMessage", listSocket);
+
+      socket.on(`receive-message`, (data) => {
+        console.log(data, "this is data from server");
+
+        const matchingReceiver = receiver.find(
+          (receiver) => receiver._id === data._id
+        );
+
+        if (matchingReceiver) {
+          console.log("match!");
+          updateReceiver(data);
+        }
+      });
+    }); */
+
+    //? Single Connect socket
+    socket.emit("joinDirectMessage", currentUserId);
+
+    socket.on(`receive-message`, (data) => {
+      console.log(data, "this is data from server");
+      updateReceiver(data);
+    });
+    console.log(listSocketConnect, "listSocketConnect");
   };
 
+  //? Update state when receive new message
   const updateReceiver = async (data) => {
+    console.log(receiver, "receiver after send");
     const updatedReceivers = receiver.map((contact) => {
       if (contact._id === data._id) {
         contact.messages.push(data.messages[data.messages.length - 1]);
@@ -226,6 +219,8 @@ export default function DirectMessage() {
       return "sender";
     }
   };
+
+  console.log(socketConnected, "socket connected");
 
   return (
     <>

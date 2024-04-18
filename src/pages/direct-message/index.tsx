@@ -28,6 +28,7 @@ export default function DirectMessage() {
   const [currentMessages, setCurrentMessages] = useState<any>();
   const [socketConnected, setSocketConnected] = useState(false);
   const [isNewMember, setIsNewMember] = useState(false);
+  const [isNewMemberDone, setIsNewMemberDone] = useState(false);
   const [contactLoaded, setContactLoaded] = useState(false);
 
   //? Update Conversation
@@ -43,6 +44,7 @@ export default function DirectMessage() {
           `/api/directMessage/getAll/${session.user.id}`
         );
         const data = response.data;
+        console.log("get all data", data);
 
         if (data.success) {
           setReceiver(data.messages);
@@ -58,25 +60,36 @@ export default function DirectMessage() {
     fetchContact();
   }, [session.user.id, isNewMember]);
 
-  //? Connect Socket io
-  useEffect(() => {
-    if (!socketConnected && contactLoaded) {
-      console.log("Connecting to socket...");
-      connectSocketio(receiver);
-      setSocketConnected(true);
-    }
-  }, [socketConnected, contactLoaded, receiver]);
-
-  /*  useEffect(() => {
-    if (isNewMember && receiver.length > 0) {
-      connectSocketio(receiver);
+  //? New Contact Helper
+  /*   useEffect(() => {
+    if (isNewMember && isNewMemberDone) {
+      connectSocketio();
+      setIsNewMemberDone(true);
     }
   }, [receiver]); */
 
+  //? Connect Socket io Effect
+  useEffect(() => {
+    if (!socketConnected && contactLoaded) {
+      connectSocketio();
+      setSocketConnected(true);
+    }
+  }, [socketConnected, contactLoaded]);
+
+  /*   useEffect(() => {
+    if (isNewMember && !isNewMemberDone) {
+      console.log("HOLLAS!!!");
+      socket.disconnect();
+      connectSocketio();
+      setIsNewMemberDone(true);
+    }
+  }, [receiver, isNewMember, isNewMemberDone]); */
+
   //? Fetch if Message exist for link Direct Message
-  /*  useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       if (receiverUser && receiver.length > 0) {
+        console.log("RECEIVER", receiver);
         await handleReceiverClick(receiverUser.user._id);
       } else {
         console.log("No message found.");
@@ -84,7 +97,7 @@ export default function DirectMessage() {
     };
 
     fetchData();
-  }, [receiver]); */
+  }, [receiver]);
 
   //? Click contact fetch messages
   const handleReceiverClick = async (id) => {
@@ -93,68 +106,37 @@ export default function DirectMessage() {
   };
 
   //? Connect Socket io
-  /*   const connectSocketio = async (receiver) => {
-    console.log("socket connect", receiver);
+  const connectSocketio = async () => {
     await fetch("/api/socket");
-
-    receiver.forEach((contact) => {
-      const userRoomId = contact._id;
-      socket.emit("joinDirectMessage", userRoomId);
-
-      socket.on(`receive-message`, (data) => {
-        updateReceiver(data);
-      });
-    });
-  }; */
-
-  const connectSocketio = async (receiver) => {
-    await fetch("/api/socket");
+    console.log("Connecting to socket...");
 
     const currentUserId = session.user.id;
-
-    let listSocketConnect = [currentUserId];
-    console.log(receiver, "receiver in socket");
-
-    receiver.forEach((contact) => {
-      if (contact.sender._id !== currentUserId) {
-        listSocketConnect.push(contact.sender._id);
-      }
-      if (contact.receiver._id !== currentUserId) {
-        listSocketConnect.push(contact.receiver._id);
-      }
-    });
-
-    //? Loop connect socket
-    /* listSocketConnect.forEach((listSocket) => {
-      socket.emit("joinDirectMessage", listSocket);
-
-      socket.on(`receive-message`, (data) => {
-        console.log(data, "this is data from server");
-
-        const matchingReceiver = receiver.find(
-          (receiver) => receiver._id === data._id
-        );
-
-        if (matchingReceiver) {
-          console.log("match!");
-          updateReceiver(data);
-        }
-      });
-    }); */
 
     //? Single Connect socket
     socket.emit("joinDirectMessage", currentUserId);
 
+    console.log(receiver, "receiverEmitConnect");
+
     socket.on(`receive-message`, (data) => {
+      //? Check data is available on receiver or not
+      const isDataExist = receiver.some((contact) => contact._id === data._id);
+
+      if (!isDataExist) {
+        console.log("Gaada coy!");
+        setReceiver((prevReceiver) => [...prevReceiver, data]);
+
+        console.log("receiver abis set", receiver);
+      }
+      console.log(receiver, "receiverinConnect");
       console.log(data, "this is data from server");
       updateReceiver(data);
     });
-    console.log(listSocketConnect, "listSocketConnect");
   };
 
   //? Update state when receive new message
-  const updateReceiver = async (data) => {
-    console.log(receiver, "receiver after send");
+  /*  const updateReceiver = async (data) => {
+    console.log(tempNewContact, "tempNewContact");
+    console.log(receiver, "in update receiver");
     const updatedReceivers = receiver.map((contact) => {
       if (contact._id === data._id) {
         contact.messages.push(data.messages[data.messages.length - 1]);
@@ -165,6 +147,22 @@ export default function DirectMessage() {
     await Promise.all(updatedReceivers);
 
     setReceiver(updatedReceivers);
+  }; */
+  const updateReceiver = async (data) => {
+    console.log(receiver, "in update receiver");
+
+    const updatedReceivers = receiver.map((contact) => {
+      if (contact._id === data._id) {
+        contact.messages.push(data.messages[data.messages.length - 1]);
+      }
+      return contact;
+    });
+
+    if (!updatedReceivers.some((contact) => contact._id === data._id)) {
+      updatedReceivers.push(data);
+    }
+
+    await setReceiver(updatedReceivers);
   };
 
   //? Function Send Message
@@ -196,8 +194,11 @@ export default function DirectMessage() {
             contact.sender._id === receiverUser.user._id ||
             contact.receiver._id === receiverUser.user._id
         );
+        console.log(isContactNew, "isContactNew");
         if (!isContactNew) {
           setIsNewMember(true);
+          setReceiver((prevReceiver) => [...prevReceiver, sendSocket]);
+          console.log(receiverUser.user.username, "is new member");
         } else {
           console.log("Receiver sudah ada");
         }
@@ -220,7 +221,7 @@ export default function DirectMessage() {
     }
   };
 
-  console.log(socketConnected, "socket connected");
+  console.log(receiver, "receiver out of all func");
 
   return (
     <>

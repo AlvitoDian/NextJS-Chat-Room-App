@@ -19,7 +19,7 @@ export default async function handler(
           { sender: sender, receiver: receiver },
           { sender: receiver, receiver: sender }, // Menyesuaikan kueri untuk mencari pesan dengan sender dan receiver yang sesuai
         ],
-      });
+      }).populate("sender receiver");
 
       // Jika pesan langsung belum ada, buat pesan langsung baru
       if (!directMessage) {
@@ -31,14 +31,18 @@ export default async function handler(
         }
 
         directMessage = new DirectMessage({
-          sender: senderUser._id,
-          receiver: receiverUser._id,
+          sender: senderUser,
+          receiver: receiverUser,
           messages: [{ content, createdAt: new Date(), role: "sender" }], // Atur peran pengirim
         });
       } else {
         // Periksa apakah pengguna saat ini adalah pengirim atau penerima
+        /* const roleCurrent =
+          directMessage.sender.toString() === sender ? "sender" : "receiver"; */
         const roleCurrent =
-          directMessage.sender.toString() === sender ? "sender" : "receiver";
+          directMessage.sender._id.toString() === sender
+            ? "sender"
+            : "receiver";
 
         // Tambahkan pesan baru ke dalam properti messages dengan peran yang sesuai
         directMessage.messages.push({

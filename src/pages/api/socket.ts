@@ -23,17 +23,11 @@ export default function SocketHandler(req, res) {
       if (data.sendSocket.room) {
         io.to(data.sendSocket.room).emit("receive-message", data.sendSocket);
       } else if (data.sendSocket.messages) {
-        /*   io.to(data.sendSocket.sender).emit(
-          "receive-message-" + data.sendSocket.sender,
+        io.to(data.sendSocket.sender._id).emit(
+          "receive-message",
           data.sendSocket
         );
-        io.to(data.sendSocket.receiver).emit(
-          "receive-message-" + data.sendSocket.receiver,
-          data.sendSocket
-        );
- */
-        io.to(data.sendSocket.sender).emit("receive-message", data.sendSocket);
-        io.to(data.sendSocket.receiver).emit(
+        io.to(data.sendSocket.receiver._id).emit(
           "receive-message",
           data.sendSocket
         );

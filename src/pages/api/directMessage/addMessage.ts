@@ -13,15 +13,13 @@ export default async function handler(
 
       const { sender, receiver, content } = req.body;
 
-      // Mencari atau membuat pesan langsung sesuai dengan id sender dan receiver
       let directMessage = await DirectMessage.findOne({
         $or: [
           { sender: sender, receiver: receiver },
-          { sender: receiver, receiver: sender }, // Menyesuaikan kueri untuk mencari pesan dengan sender dan receiver yang sesuai
+          { sender: receiver, receiver: sender },
         ],
       }).populate("sender receiver");
 
-      // Jika pesan langsung belum ada, buat pesan langsung baru
       if (!directMessage) {
         const senderUser = await User.findById(sender);
         const receiverUser = await User.findById(receiver);
@@ -33,26 +31,38 @@ export default async function handler(
         directMessage = new DirectMessage({
           sender: senderUser,
           receiver: receiverUser,
-          messages: [{ content, createdAt: new Date(), role: "sender" }], // Atur peran pengirim
+          messages: [
+            {
+              content,
+              createdAt: new Date(),
+              role: "sender",
+              status: {
+                sender: "read",
+                receiver: "unread",
+              },
+            },
+          ],
         });
       } else {
-        // Periksa apakah pengguna saat ini adalah pengirim atau penerima
-        /* const roleCurrent =
-          directMessage.sender.toString() === sender ? "sender" : "receiver"; */
         const roleCurrent =
           directMessage.sender._id.toString() === sender
             ? "sender"
             : "receiver";
+        let messageStatus = {};
+        if (roleCurrent === "sender") {
+          messageStatus = { sender: "read", receiver: "unread" };
+        } else {
+          messageStatus = { sender: "unread", receiver: "read" };
+        }
 
-        // Tambahkan pesan baru ke dalam properti messages dengan peran yang sesuai
         directMessage.messages.push({
           content,
           createdAt: new Date(),
           role: roleCurrent,
+          status: messageStatus,
         });
       }
 
-      // Simpan pesan langsung
       const savedMessage = await directMessage.save();
 
       return res.status(200).json({

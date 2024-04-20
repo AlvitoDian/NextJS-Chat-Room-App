@@ -18,7 +18,10 @@ const directMessageSchema = new Schema(
       {
         content: {
           type: String,
-          /*      required: true, */
+        },
+        contentType: {
+          type: String,
+          default: "text",
         },
         createdAt: {
           type: Date,
@@ -26,7 +29,9 @@ const directMessageSchema = new Schema(
         },
         role: {
           type: String,
-          /*      required: true, */
+        },
+        fileUrl: {
+          type: String,
         },
       },
     ],

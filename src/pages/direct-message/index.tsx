@@ -348,6 +348,11 @@ export default function DirectMessage() {
                               ? currentMessages.sender.profileImage
                               : currentMessages.receiver.profileImage
                           }
+                          fileChat={
+                            message.contentType === "file"
+                              ? message.fileUrl
+                              : null
+                          }
                         />
                       );
                     })}
@@ -618,6 +623,11 @@ export default function DirectMessage() {
                             message.role === "sender"
                               ? currentMessages.sender.profileImage
                               : currentMessages.receiver.profileImage
+                          }
+                          fileChat={
+                            message.contentType === "file"
+                              ? message.fileUrl
+                              : null
                           }
                         />
                       );

@@ -1,5 +1,23 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Modal from "react-modal";
+
+const customStyles = {
+  overlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Warna latar belakang overlay
+  },
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    borderRadius: "8px",
+    border: "none",
+    padding: "15px",
+  },
+};
 
 export default function BubbleChatDirectMessage({
   id,
@@ -8,8 +26,12 @@ export default function BubbleChatDirectMessage({
   isSender,
   time,
   profileImage,
+  fileChat,
 }) {
   const bubbleRef = useRef(null);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  Modal.setAppElement("#__next");
 
   useEffect(() => {
     if (bubbleRef.current) {
@@ -33,6 +55,13 @@ export default function BubbleChatDirectMessage({
     }
   }
 
+  const handleImageClick = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
   return (
     <div
       ref={bubbleRef}
@@ -71,11 +100,46 @@ export default function BubbleChatDirectMessage({
               : "rounded-e-xl rounded-es-xl"
           }  bg-gradient-to-b from-[#906BFA] to-[#a182f5]`}
         >
+          {fileChat && (
+            <Image
+              className="w-full mb-1 rounded-md shadow-lg cursor-pointer"
+              src={fileChat}
+              alt="file"
+              width={250}
+              height={250}
+              onClick={handleImageClick}
+            />
+          )}
+
           <p className="text-sm font-normal text-gray-900 dark:text-white">
             {message}
           </p>
         </div>
       </div>
+      <Modal
+        isOpen={modalIsOpen}
+        style={customStyles}
+        onRequestClose={closeModal}
+        contentLabel="Gambar Pop-up"
+      >
+        <div className="flex justify-center">
+          {fileChat && (
+            <Image
+              src={fileChat}
+              alt="file"
+              width={1000}
+              height={1000}
+              className="rounded-md"
+            />
+          )}
+        </div>
+        <button
+          onClick={closeModal}
+          className="bg-[#6F3EFC] hover:bg-[#521ee8] px-[12px] py-[2px] text-white rounded-full text-md transition-all duration-500 my-2"
+        >
+          Tutup
+        </button>
+      </Modal>
     </div>
   );
 }

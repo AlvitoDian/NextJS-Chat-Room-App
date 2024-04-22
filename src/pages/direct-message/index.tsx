@@ -35,6 +35,29 @@ export default function DirectMessage() {
   //? Mobile View State
   const [isChatOpen, setIsChatOpen] = useState(false);
 
+  //? Image File Handling
+  const [fileImage, setFileImage] = useState("");
+  const [previewImage, setPreviewImage] = useState("");
+
+  const handleImageChange = (e: any) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      setFileImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string);
+      };
+      reader.onerror = () => {
+        /* setError("Failed to read the file."); */
+      };
+      reader.readAsDataURL(file);
+    } else {
+      /* setError("Please select a file."); */
+      setPreviewImage("");
+    }
+  };
+
   const toggleChatMobile = () => {
     setIsChatOpen(!isChatOpen);
   };
@@ -365,70 +388,95 @@ export default function DirectMessage() {
                       sendMessage();
                     }}
                   >
-                    <div className="flex items-center px-3 py-2 rounded-b-lg bg-[#906BFA]">
-                      {/*  Button Image */}
-                      <label
-                        htmlFor="image-upload"
-                        className="inline-flex justify-center px-2 text-gray-500 rounded-lg cursor-pointer mr-3"
-                      >
-                        <svg
-                          className="w-5 h-5"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 18"
-                        >
-                          <path
-                            fill="white"
-                            d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
+                    <input
+                      type="file"
+                      id="image-upload"
+                      accept=".png, .jpg, .jpeg"
+                      name="fileImage"
+                      onChange={handleImageChange}
+                      style={{ display: "none" }}
+                    />
+                    <div className=" px-3 py-2 rounded-b-lg bg-[#906BFA]">
+                      <div className="flex-col">
+                        {/* If Image Inputed */}
+                        {previewImage && (
+                          <div className="flex">
+                            <Image
+                              className="w-[150px] m-3 rounded-md shadow-lg"
+                              src={previewImage}
+                              alt="file"
+                              width={10}
+                              height={10}
+                            />
+                          </div>
+                        )}
+                        {/* Field Chat */}
+                        <div className="flex items-center">
+                          {" "}
+                          {/*  Button Image */}
+                          <label
+                            htmlFor="image-upload"
+                            className="inline-flex justify-center px-2 text-gray-500 rounded-lg cursor-pointer mr-3"
+                          >
+                            <svg
+                              className="w-5 h-5"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 20 18"
+                            >
+                              <path
+                                fill="white"
+                                d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
+                              />
+                              <path
+                                stroke="white"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M18 1H2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
+                              />
+                              <path
+                                stroke="white"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
+                              />
+                            </svg>
+                            <span className="sr-only">Upload image</span>
+                          </label>
+                          {/*  <input
+                            type="file"
+                            id="image-upload"
+                            className="hidden"
+                            accept="image/*"
+                          /> */}
+                          {/*  Button Image End */}
+                          <textarea
+                            id="chat"
+                            rows={1}
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg shadow"
+                            placeholder="Ketik pesan..."
                           />
-                          <path
-                            stroke="white"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M18 1H2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
-                          />
-                          <path
-                            stroke="white"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
-                          />
-                        </svg>
-                        <span className="sr-only">Upload image</span>
-                      </label>
-                      <input
-                        type="file"
-                        id="image-upload"
-                        className="hidden"
-                        accept="image/*"
-                      />
-
-                      {/*  Button Image End */}
-                      <textarea
-                        id="chat"
-                        rows={1}
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg shadow"
-                        placeholder="Ketik pesan..."
-                      />
-                      <button
-                        type="submit"
-                        className="inline-flex justify-center ml-2 p-2 text-blue-600 rounded-full cursor-pointer "
-                      >
-                        <svg
-                          className="w-5 h-5 rotate-90 rtl:-rotate-90 text-[#906BFA]"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="white"
-                          viewBox="0 0 18 20"
-                        >
-                          <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
-                        </svg>
-                      </button>
+                          <button
+                            type="submit"
+                            className="inline-flex justify-center ml-2 p-2 text-blue-600 rounded-full cursor-pointer "
+                          >
+                            <svg
+                              className="w-5 h-5 rotate-90 rtl:-rotate-90 text-[#906BFA]"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="white"
+                              viewBox="0 0 18 20"
+                            >
+                              <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </form>
                 </div>

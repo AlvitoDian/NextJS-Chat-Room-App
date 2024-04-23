@@ -322,6 +322,12 @@ export default function DirectMessage() {
                               ? message.receiver.profileImage
                               : message.sender.profileImage
                           }
+                          isMessageFile={
+                            message.messages.length > 0
+                              ? message.messages[message.messages.length - 1]
+                                  .contentType
+                              : "No message"
+                          }
                         />
                       </div>
                     );

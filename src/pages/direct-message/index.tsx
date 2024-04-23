@@ -156,18 +156,32 @@ export default function DirectMessage() {
 
   //? Function Send Message
   const sendMessage = async () => {
-    if (message.trim() === "") {
+    if (message.trim() === "" && !fileImage) {
       return;
+    }
+    const senderId = session.user.id;
+    const receiverId = receiverUser.user._id;
+
+    const formData = new FormData();
+    formData.append("content", message);
+    formData.append("sender", senderId);
+    formData.append("receiver", receiverId);
+
+    if (fileImage) {
+      formData.append("fileImage", fileImage);
     }
 
     try {
-      const senderId = session.user.id;
-      const receiverId = receiverUser.user._id;
-      const response = await axios.post(`/api/directMessage/addMessage`, {
-        content: message,
-        sender: senderId,
-        receiver: receiverId,
-      });
+      const response = await axios.post(
+        `/api/directMessage/addMessage`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response);
 
       const data = response.data;
       if (data.success) {
@@ -183,7 +197,7 @@ export default function DirectMessage() {
             contact.sender._id === receiverUser.user._id ||
             contact.receiver._id === receiverUser.user._id
         );
-        console.log(isContactNew, "isContactNew");
+
         if (!isContactNew) {
           setIsNewMember(true);
           setReceiver((prevReceiver) => [...prevReceiver, sendSocket]);
@@ -198,6 +212,8 @@ export default function DirectMessage() {
       console.error("Error sending message:", error);
     }
 
+    setFileImage("");
+    setPreviewImage("");
     setMessage("");
   };
 
@@ -387,6 +403,7 @@ export default function DirectMessage() {
                       e.preventDefault();
                       sendMessage();
                     }}
+                    encType="multipart/form-data"
                   >
                     <input
                       type="file"

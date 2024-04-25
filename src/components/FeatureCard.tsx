@@ -2,9 +2,11 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
+  faUserPlus,
   faComments,
-  faClockRotateLeft,
+  faUsers,
   faMobile,
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 
 function FeatureCard({ title, icon, description }) {
@@ -16,11 +18,17 @@ function FeatureCard({ title, icon, description }) {
     case "faComments":
       iconComponent = <FontAwesomeIcon icon={faComments} />;
       break;
-    case "faClockRotateLeft":
-      iconComponent = <FontAwesomeIcon icon={faClockRotateLeft} />;
+    case "faUsers":
+      iconComponent = <FontAwesomeIcon icon={faUsers} />;
       break;
     case "faMobile":
       iconComponent = <FontAwesomeIcon icon={faMobile} />;
+      break;
+    case "faUserPlus":
+      iconComponent = <FontAwesomeIcon icon={faUserPlus} />;
+      break;
+    case "faEye":
+      iconComponent = <FontAwesomeIcon icon={faEye} />;
       break;
     default:
       iconComponent = <FontAwesomeIcon icon={faUser} />;

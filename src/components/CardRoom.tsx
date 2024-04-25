@@ -48,7 +48,7 @@ export default function CardRoom({
   return (
     <Link href={`/chat-room/${id}`} onClick={handleJoinRoom}>
       <div
-        className="max-w-xl w-96 rounded-lg overflow-hidden shadow-lg flex justify-center items-end image-card overlay-gradient"
+        className="max-w-lg w-96 rounded-lg overflow-hidden shadow-lg flex justify-center items-end image-card overlay-gradient"
         style={{ backgroundImage: `url(${imgBanner})` }}
       >
         <div className="px-6 py-4 text-white z-10 flex flex-col items-center">

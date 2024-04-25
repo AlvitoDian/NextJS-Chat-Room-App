@@ -17,10 +17,10 @@ function Feature() {
         "Berkomunikasi dengan pengguna lain secara real-time tanpa perlu refresh halaman.",
     },
     {
-      title: "Histori Obrolan",
-      icon: "faClockRotateLeft",
+      title: "Chat Grup",
+      icon: "faUsers",
       description:
-        "Aplikasi harus responsif dan berfungsi dengan baik di berbagai perangkat seperti desktop, tablet, dan ponsel.",
+        "Berpartisipasi dalam obrolan dengan beberapa pengguna sekaligus dalam satu grup.",
     },
     {
       title: "Responsif pada Berbagai Perangkat",
@@ -28,11 +28,22 @@ function Feature() {
       description:
         "Aplikasi harus responsif dan berfungsi dengan baik di berbagai perangkat seperti desktop, tablet, dan ponsel.",
     },
+    {
+      title: "Tambah Teman",
+      icon: "faUserPlus",
+      description: "Menambahkan pengguna lain sebagai teman dalam aplikasi.",
+    },
+    {
+      title: "Chat Pribadi Antar Pengguna",
+      icon: "faEye",
+      description:
+        "Berinteraksi dengan pengguna lain secara pribadi dalam obrolan satu antar satu.",
+    },
   ];
 
   return (
     <div className="bg-white text-white flex justify-center items-center">
-      <div className="sm:px-3 md:px-[400px] grid md:grid-cols-2 grid-cols-1 gap-5">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-5">
         {features.map((feature, index) => (
           <FeatureCard
             key={index}

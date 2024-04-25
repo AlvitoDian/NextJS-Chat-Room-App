@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import BubbleChatDirectMessage from "@/components/BubbleChatDirectMessage";
 import io from "socket.io-client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 export default function DirectMessage() {
   let socket = io();
@@ -37,7 +37,7 @@ export default function DirectMessage() {
 
   //? Image File Handling
   const [fileImage, setFileImage] = useState("");
-  const [previewImage, setPreviewImage] = useState("");
+  const [previewImage, setPreviewImage] = useState("/akupergi.png");
 
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
@@ -224,6 +224,12 @@ export default function DirectMessage() {
     } else {
       return "sender";
     }
+  };
+
+  //? Function remove image from chat
+  const removeImageFromChat = async () => {
+    setPreviewImage("");
+    setFileImage("");
   };
 
   return (
@@ -424,13 +430,24 @@ export default function DirectMessage() {
                         {/* If Image Inputed */}
                         {previewImage && (
                           <div className="flex">
-                            <Image
-                              className="w-[150px] m-3 rounded-md shadow-lg"
-                              src={previewImage}
-                              alt="file"
-                              width={10}
-                              height={10}
-                            />
+                            <div className="relative">
+                              <div className="absolute top-2 rounded-full right-2 bg-white w-3 h-3"></div>
+                              <div
+                                className="absolute top-0 right-1 text-lg rounded-full cursor-pointer text-red-500"
+                                onClick={() => {
+                                  removeImageFromChat();
+                                }}
+                              >
+                                <FontAwesomeIcon icon={faCircleXmark} />
+                              </div>
+                              <Image
+                                className="w-[150px] m-3 rounded-md shadow-lg"
+                                src={previewImage}
+                                alt="file"
+                                width={10}
+                                height={10}
+                              />
+                            </div>
                           </div>
                         )}
                         {/* Field Chat */}
@@ -617,6 +634,12 @@ export default function DirectMessage() {
                             isCurrentUserSender
                               ? message.receiver.profileImage
                               : message.sender.profileImage
+                          }
+                          isMessageFile={
+                            message.messages.length > 0
+                              ? message.messages[message.messages.length - 1]
+                                  .contentType
+                              : "No message"
                           }
                         />
                       </div>

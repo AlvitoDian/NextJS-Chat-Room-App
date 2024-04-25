@@ -1,6 +1,4 @@
-import Head from "next/head";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Accordion from "@/components/Accordion";
 
 export default function FaQ() {
@@ -33,17 +31,12 @@ export default function FaQ() {
   ];
 
   return (
-    <div className="h-[100vh]">
-      <Head>
-        <title>FaQ</title>
-      </Head>
-      <div className="flex flex-col">
-        <div className="text-center text-3xl text-gray-700 font-bold">FaQ</div>
-        <div className="px-10 py-10 flex flex-col gap-[12px]">
-          {faqs.map((faq, index) => (
-            <Accordion key={index} title={faq.title} content={faq.content} />
-          ))}
-        </div>
+    <div className="flex flex-col my-[80px]">
+      <div className="text-center text-3xl text-gray-700 font-bold">FaQ</div>
+      <div className=" py-10 flex flex-col gap-[12px]">
+        {faqs.map((faq, index) => (
+          <Accordion key={index} title={faq.title} content={faq.content} />
+        ))}
       </div>
     </div>
   );

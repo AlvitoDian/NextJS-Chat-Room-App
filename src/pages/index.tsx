@@ -4,6 +4,8 @@ import Hero from "@/components/Hero";
 import Feature from "@/components/Feature";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Accordion from "@/components/Accordion";
+import FaQ from "@/components/FaQ";
 
 export default function Home() {
   const [rooms, setRooms] = useState([]);
@@ -47,8 +49,8 @@ export default function Home() {
         <title>Home</title>
       </Head>
       <Hero />
-      <Feature />
-      <div className="px-10 py-10">
+      <div className="lg:px-[160px] sm:px-[40px] py-10">
+        <Feature />
         <h2 className="text-center py-10 font-bold text-2xl text-gray-700">
           Segera gabung obrolan
         </h2>
@@ -68,6 +70,7 @@ export default function Home() {
             ))
           )}
         </div>
+        <FaQ />
       </div>
     </>
   );

@@ -67,35 +67,17 @@ export default function Navbar() {
                 Home
               </Link>
             </li>
-            <li>
-              <a
-                href="/faq"
-                className="block py-2 px-3 rounded md:bg-transparent md:p-0 "
-                aria-current="page"
-              >
-                FaQ
-              </a>
-            </li>
-            <li>
-              <a
-                href="/faq"
-                className="block py-2 px-3 rounded md:bg-transparent md:p-0 "
-                aria-current="page"
-              >
-                Contact
-              </a>
-            </li>
 
             {session ? (
               <>
                 <li>
-                  <a
+                  <Link
                     href="/direct-message"
                     className="block py-2 px-3 rounded md:bg-transparent md:p-0 "
                     aria-current="page"
                   >
                     Direct Message
-                  </a>
+                  </Link>
                 </li>
                 <li
                   className="relative"

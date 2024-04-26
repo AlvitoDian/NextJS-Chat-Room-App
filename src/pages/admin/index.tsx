@@ -114,6 +114,8 @@ export default function Admin() {
         setField({
           name: "",
         });
+        setPreviewImage("");
+        setBannerImage("");
         console.log(response);
 
         setRooms((prevState) => [...prevState, response.data.savedRoom]);

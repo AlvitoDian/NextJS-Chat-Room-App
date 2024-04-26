@@ -29,13 +29,20 @@ export default async function handler(
           return res.status(500).json({ error: "Error parsing form" });
         }
 
+        const { name } = fields;
+        const nameString = name.toString();
         const imagePath = files?.bannerImage?.[0];
-        console.log(imagePath, "imagePath");
         const imageUrl = await uploadImage(imagePath.filepath, "bannerChat");
 
-        console.log("Image uploaded to Cloudinary:", imageUrl);
+        //? Save Room
+        const room = new Room({ name: nameString, bannerImage: imageUrl });
+        const savedRoom = await room.save();
 
-        return res.status(200).json({ imageUrl });
+        return res.status(200).json({
+          message: "Chat Room created successfully",
+          success: true,
+          savedRoom,
+        });
       });
     } catch (error) {
       console.error("Error in signup", error);

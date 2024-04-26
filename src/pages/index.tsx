@@ -43,6 +43,7 @@ export default function Home() {
         setIsLoading(false);
       });
   }, []);
+
   return (
     <>
       <Head>
@@ -67,7 +68,9 @@ export default function Home() {
                 name={room.name}
                 id={room._id}
                 imgProfile={images}
-                imgBanner={"/bannerchat.png"}
+                imgBanner={
+                  room.bannerImage ? room.bannerImage : "/bannerchat.png"
+                }
                 participants={room.participants}
               />
             ))

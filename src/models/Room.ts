@@ -9,7 +9,7 @@ const roomSchema = new Schema(
       required: [true, "Must provide a username"],
     },
     participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    roomImage: {
+    bannerImage: {
       type: String,
     },
   },

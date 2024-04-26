@@ -17,6 +17,9 @@ export default function Admin() {
     "https://www.w3schools.com/howto/img_avatar.png",
   ];
 
+  const [bannerImage, setBannerImage] = useState("");
+  const [previewImage, setPreviewImage] = useState("");
+
   const [rooms, setRooms] = useState([]);
   const router = useRouter();
   const [field, setField] = useState({
@@ -24,6 +27,26 @@ export default function Admin() {
   });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  //? Image Handler
+  const handleImageChange = (e: any) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      setBannerImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string);
+      };
+      reader.onerror = () => {
+        setError("Failed to read the file.");
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setError("Please select a file.");
+      setPreviewImage("");
+    }
+  };
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -33,7 +56,7 @@ export default function Admin() {
     }));
   };
 
-  const handleSubmit = async (e: any) => {
+  /*   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!field.name) {
       setError("Must provide all the credentials");
@@ -43,6 +66,46 @@ export default function Admin() {
       const response = await axios.post("/api/chatRoom/addRoom", field, {
         headers: {
           "Content-Type": "application/json",
+        },
+      });
+      if (response.status >= 200 && response.status < 300) {
+        setIsLoading(false);
+
+        setField({
+          name: "",
+        });
+        console.log(response);
+
+        setRooms((prevState) => [...prevState, response.data.savedRoom]);
+
+        console.log(field);
+      } else {
+        const errorMessage = response.data.message;
+        console.log("Signup failed", errorMessage);
+      }
+    } catch (error: any) {
+      setError(error.response.data.message);
+      setIsLoading(false);
+      console.log("Signup failed", error.message);
+    }
+  }; */
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (!field.name) {
+      setError("Must provide all the credentials");
+    }
+
+    const formData = new FormData();
+    formData.append("name", field.name);
+    formData.append("bannerImage", bannerImage);
+
+    try {
+      setIsLoading(true);
+
+      const response = await axios.post(`/api/chatRoom/addRoom`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
       });
       if (response.status >= 200 && response.status < 300) {
@@ -96,7 +159,7 @@ export default function Admin() {
             <h2 className="text-2xl font-semibold text-gray-800">
               Tambah Chat Room
             </h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
               <div className="mb-4">
                 <label
                   htmlFor="nama"
@@ -121,10 +184,26 @@ export default function Admin() {
                 >
                   Banner:
                 </label>
+                {previewImage && (
+                  <img
+                    className="w-32  mb-3 shadow-lg "
+                    src={previewImage}
+                    alt="Profile preview"
+                  />
+                )}
+                {/*   {!previewImage && (
+                  <img
+                    className="w-32 mb-3 shadow-lg opacity-60 hover:opacity-90 transition duration-300 ease-in-out"
+                    src={bannerImage}
+                    alt="Profile image"
+                  />
+                )} */}
                 <input
                   type="file"
                   id="file"
-                  name="profileImage"
+                  name="bannerImage"
+                  accept=".png, .jpg, .jpeg"
+                  onChange={handleImageChange}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>

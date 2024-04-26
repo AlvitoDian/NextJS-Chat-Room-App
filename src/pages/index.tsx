@@ -50,11 +50,14 @@ export default function Home() {
       </Head>
       <Hero />
       <div className="lg:px-[160px] sm:px-[40px] py-10">
+        {/* Feature Section */}
         <Feature />
+        {/* Grup Chat Section */}
         <h2 className="text-center py-10 font-bold text-2xl text-gray-700">
           Segera gabung obrolan
         </h2>
-        <div className="flex gap-[12px] justify-center flex-wrap">
+        {/*  <div className="flex gap-[12px] justify-center flex-wrap"> */}
+        <div className="grid sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-2 justify-center">
           {isLoading ? (
             <div>Loading...</div>
           ) : (
@@ -70,6 +73,7 @@ export default function Home() {
             ))
           )}
         </div>
+        {/* Faq Section */}
         <FaQ />
       </div>
     </>

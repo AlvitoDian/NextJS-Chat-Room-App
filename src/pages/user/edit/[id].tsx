@@ -7,14 +7,11 @@ import { useSession } from "next-auth/react";
 
 const getUserById = async (id) => {
   try {
-    const res = await axios.get(
-      `http://localhost:3000/api/users/detailUser/${id}`,
-      {
-        headers: {
-          "Cache-Control": "no-store",
-        },
-      }
-    );
+    const res = await axios.get(`/api/users/detailUser/${id}`, {
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    });
 
     return res.data;
   } catch (error) {

@@ -3,7 +3,12 @@ const nextConfig = {
   reactStrictMode: false,
   images: {
     formats: ["image/avif", "image/webp"],
-    domains: ["placehold.co", "w3schools.com", "s.gravatar.com"],
+    domains: [
+      "placehold.co",
+      "w3schools.com",
+      "s.gravatar.com",
+      "res.cloudinary.com",
+    ],
     remotePatterns: [
       {
         protocol: "https",
@@ -16,6 +21,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "s.gravatar.com",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
       },
     ],
   },

@@ -4,6 +4,7 @@ import { faMessage, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useReceiver } from "@/contexts/ReceiverContext";
+import Image from "next/image";
 
 export default function UserProfileModal({
   openModalUser,
@@ -11,6 +12,7 @@ export default function UserProfileModal({
   email,
   profileImage,
   userId,
+  userSince,
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -30,15 +32,6 @@ export default function UserProfileModal({
     };
   }, [openModalUser]);
 
-  const user = {
-    name: "John Doe",
-    email: "john@example.com",
-    username: "johndoe",
-    phone: "123-456-7890",
-    website: "example.com",
-    avatar: "https://via.placeholder.com/150",
-  };
-
   const handleDirectMessageClick = async () => {
     try {
       await fetchReceiverUser(userId);
@@ -47,6 +40,10 @@ export default function UserProfileModal({
       console.error("Error fetching user:", error);
     }
   };
+  function getYearFromStringTimestamp(timestampString) {
+    const date = new Date(timestampString);
+    return date.getFullYear();
+  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
@@ -71,10 +68,12 @@ export default function UserProfileModal({
           </svg>
         </button>
         <div className="flex items-center justify-center">
-          <img
+          <Image
             src={profileImage}
             alt={username}
             className="w-16 h-16 rounded-full"
+            width={100}
+            height={100}
           />
           <div className="ml-4">
             <h2 className="text-lg font-semibold">{username}</h2>
@@ -83,14 +82,11 @@ export default function UserProfileModal({
         </div>
         <div className="mt-4">
           <h3 className="text-md font-semibold">User Details</h3>
-          <p className="mt-2 text-sm text-gray-500">Username: {username}</p>
-          <p className="mt-1 text-sm text-gray-500">Phone: {user.phone}</p>
-          {receiverUser && receiverUser.user && receiverUser.user._id && (
-            <p className="mt-1 text-sm text-gray-500">
-              Website: {receiverUser.user._id}
-            </p>
-          )}
-          {/* <p className="mt-1 text-sm text-gray-500">Website: {user.website}</p> */}
+          <p className="mt-1 text-sm text-gray-500">ID : 09c365</p>
+          <p className="mt-2 text-sm text-gray-500">Username : {username}</p>
+          <p className="mt-2 text-sm text-gray-500">
+            Since : {getYearFromStringTimestamp(userSince)}
+          </p>
         </div>
         <div className="flex p-5 gap-10 justify-center items-center">
           <div

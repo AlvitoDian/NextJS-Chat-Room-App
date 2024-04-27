@@ -5,6 +5,7 @@ import { connectDB } from "@/utils/connectDB";
 import { IncomingForm } from "formidable";
 import fs from "fs";
 import path from "path";
+import { uploadImage } from "@/utils/cloudinary/uploadHelper";
 
 export const config = {
   api: {
@@ -58,46 +59,33 @@ export default async function handler(
           };
 
           if (fileImage) {
-            const fileExtension = path.extname(fileImage.originalFilename);
+            const imageChat = await uploadImage(
+              fileImage.filepath,
+              "imageChat"
+            );
+
+            messageContent.fileUrl = imageChat;
             messageContent.contentType = "file";
-            const newFilename = `${fileImage.newFilename}${fileExtension}`;
 
-            const newPath = path.join(form.uploadDir, newFilename);
-
-            fs.rename(fileImage.filepath, newPath, async (error) => {
-              if (error) {
-                console.error("Error renaming file:", error);
-                return res.status(500).json({ error: "Error renaming file" });
-              }
-
-              let pathDB = newPath.split("\\");
-
-              let lastPath = pathDB[pathDB.length - 1];
-              let pathPublic = "/uploads/" + lastPath;
-
-              messageContent.fileUrl = pathPublic;
-              messageContent.contentType = "file";
-
-              // Create directMessage with the messageContent
-              const directMessage = new DirectMessage({
-                sender: senderUser,
-                receiver: receiverUser,
-                messages: [messageContent],
-              });
-
-              // Save the directMessage
-              try {
-                const savedMessage = await directMessage.save();
-                return res.status(200).json({
-                  message: "Message sent successfully",
-                  success: true,
-                  savedMessage,
-                });
-              } catch (saveError) {
-                console.error("Error saving message:", saveError);
-                return res.status(500).json({ error: "Error saving message" });
-              }
+            // Create directMessage with the messageContent
+            const directMessage = new DirectMessage({
+              sender: senderUser,
+              receiver: receiverUser,
+              messages: [messageContent],
             });
+
+            // Save the directMessage
+            try {
+              const savedMessage = await directMessage.save();
+              return res.status(200).json({
+                message: "Message sent successfully",
+                success: true,
+                savedMessage,
+              });
+            } catch (saveError) {
+              console.error("Error saving message:", saveError);
+              return res.status(500).json({ error: "Error saving message" });
+            }
           } else {
             const directMessage = new DirectMessage({
               sender: senderUser,
@@ -142,35 +130,26 @@ export default async function handler(
           };
 
           if (fileImage) {
-            const fileExtension = path.extname(fileImage.originalFilename);
+            const imageChat = await uploadImage(
+              fileImage.filepath,
+              "imageChat"
+            );
+
+            messageContent.fileUrl = imageChat;
             messageContent.contentType = "file";
-            const newFilename = `${fileImage.newFilename}${fileExtension}`;
 
-            const newPath = path.join(form.uploadDir, newFilename);
-
-            fs.rename(fileImage.filepath, newPath, async (error) => {
-              if (error) {
-                console.error("Error renaming file:", error);
-                return res.status(500).json({ error: "Error renaming file" });
-              }
-
-              const pathPublic = `/uploads/${newFilename}`;
-
-              messageContent.fileUrl = pathPublic;
-
-              try {
-                directMessage.messages.push(messageContent);
-                const savedMessage = await directMessage.save();
-                return res.status(200).json({
-                  message: "Message sent successfully",
-                  success: true,
-                  savedMessage,
-                });
-              } catch (saveError) {
-                console.error("Error saving message:", saveError);
-                return res.status(500).json({ error: "Error saving message" });
-              }
-            });
+            try {
+              directMessage.messages.push(messageContent);
+              const savedMessage = await directMessage.save();
+              return res.status(200).json({
+                message: "Message sent successfully",
+                success: true,
+                savedMessage,
+              });
+            } catch (saveError) {
+              console.error("Error saving message:", saveError);
+              return res.status(500).json({ error: "Error saving message" });
+            }
           } else {
             directMessage.messages.push(messageContent);
             try {

@@ -2,8 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import Room from "@/models/Room";
 import { connectDB } from "@/utils/connectDB";
 import { IncomingForm } from "formidable";
-import fs from "fs";
-import path from "path";
 import { uploadImage } from "@/utils/cloudinary/uploadHelper";
 
 export const config = {
@@ -29,12 +27,13 @@ export default async function handler(
           return res.status(500).json({ error: "Error parsing form" });
         }
 
+        //? Initialization File and Fields
         const { name } = fields;
         const nameString = name.toString();
         const imagePath = files?.bannerImage?.[0];
         const imageUrl = await uploadImage(imagePath.filepath, "bannerChat");
 
-        //? Save Room
+        //? Save
         const room = new Room({ name: nameString, bannerImage: imageUrl });
         const savedRoom = await room.save();
 

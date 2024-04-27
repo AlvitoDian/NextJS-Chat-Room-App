@@ -127,8 +127,8 @@ export default function BubbleChatDirectMessage({
             <Image
               src={fileChat}
               alt="file"
-              width={1000}
-              height={1000}
+              width={400}
+              height={400}
               className="rounded-md"
             />
           )}

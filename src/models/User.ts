@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
   {
+    userid: {
+      type: String,
+      unique: true,
+    },
     username: {
       type: String,
       required: [true, "Must provide a username"],

@@ -4,6 +4,7 @@ import { connectDB } from "@/utils/connectDB";
 import { IncomingForm } from "formidable";
 import fs from "fs";
 import path from "path";
+import { uploadImage } from "@/utils/cloudinary/uploadHelper";
 
 export const config = {
   api: {
@@ -20,7 +21,6 @@ export default async function handler(
       await connectDB();
 
       const form = new IncomingForm();
-      form.uploadDir = path.join(process.cwd(), "public/uploads");
       form.keepExtensions = true;
 
       const { id } = req.query;
@@ -47,26 +47,15 @@ export default async function handler(
               return res.status(400).json({ error: "User Not Found" });
             }
 
-            const fileExtension = path.extname(profileImage.originalFilename);
-            const newFilename = `${profileImage.newFilename}${fileExtension}`;
+            const profileImageUrl = await uploadImage(
+              profileImage.filepath,
+              "userProfile"
+            );
 
-            const newPath = path.join(form.uploadDir, newFilename);
-            fs.rename(profileImage.filepath, newPath, async (error) => {
-              if (error) {
-                console.error("Error renaming file:", error);
-                return res.status(500).json({ error: "Error renaming file" });
-              }
+            existingUser.profileImage = profileImageUrl;
+            await existingUser.save();
 
-              let pathDB = newPath.split("\\");
-
-              let lastPath = pathDB[pathDB.length - 1];
-              let pathPublic = "/uploads/" + lastPath;
-
-              existingUser.profileImage = pathPublic;
-              await existingUser.save();
-
-              updateUsernameOrEmail();
-            });
+            updateUsernameOrEmail();
           } catch (updateError) {
             console.error("Error updating user profile image:", updateError);
             return res

@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import io from "socket.io-client";
 import UserProfileModal from "@/components/UserProfileModal";
+import SkeletonGroupChat from "@/components/Skeleton/SkeletonGroupChat";
 
 export default function ChatRoom() {
   let socket = io();
@@ -132,15 +133,14 @@ export default function ChatRoom() {
 
   //? Loading Screen
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <SkeletonGroupChat />;
   }
 
   //? Room Not Found Screen
   if (!room) {
     return (
       <>
-        <p>Room not found</p>
-        Back to <Link href="/">Home</Link>
+        <SkeletonGroupChat />;
       </>
     );
   }
@@ -153,12 +153,14 @@ export default function ChatRoom() {
     setProfileUserModal(user);
   };
 
+  console.log(profileUserModal.user);
+
   return (
     <>
       <Head>
         <title>Chat Section</title>
       </Head>
-      <div className="px-10 py-10">
+      <div className="px-10 py-10 animate-fade-in">
         {modalUserIsOpen && profileUserModal.user ? (
           <UserProfileModal
             openModalUser={openModalUser}
@@ -166,6 +168,7 @@ export default function ChatRoom() {
             email={profileUserModal.user.email}
             profileImage={profileUserModal.user.profileImage}
             userId={profileUserModal.user._id}
+            userSince={profileUserModal.user.createdAt}
           />
         ) : null}
 
@@ -175,7 +178,7 @@ export default function ChatRoom() {
             <div className="flex bg-[#906bfa] rounded-t-lg drop-shadow-lg z-[99]">
               {/* Grup Icon */}
               <div className="flex justify-center items-center px-4">
-                <Avatar image={session.user.profileImage} />
+                <Avatar image={room.bannerImage} />
               </div>
               {/* Grup Members */}
               <div className="py-2 flex flex-col text-white">

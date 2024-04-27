@@ -3,6 +3,25 @@ import User from "@/models/User";
 import { connectDB } from "@/utils/connectDB";
 const bcryptjs = require("bcryptjs");
 const gravatar = require("gravatar");
+const CryptoJS = require("crypto-js");
+
+//? Function Convert Six Digits
+function convertToSixDigits(inputString) {
+  const hashedValue = CryptoJS.SHA256(inputString).toString();
+  return hashedValue.slice(-6);
+}
+
+//? Function Combine Six Digits
+function combineEncryptedValues(value1, value2) {
+  let combinedValue = value1 + value2;
+  if (combinedValue.length > 6) {
+    combinedValue = combinedValue.slice(0, 6);
+  }
+  while (combinedValue.length < 6) {
+    combinedValue += Math.floor(Math.random() * 10);
+  }
+  return combinedValue;
+}
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,6 +43,16 @@ export default async function handler(
           .json({ message: "Username or Email already exists" });
       }
 
+      //? Generate Unique Six Digits ID
+      const timestamp = Date.now().toString();
+      const encryptedTimestamp = convertToSixDigits(timestamp);
+      const encryptedEmail = convertToSixDigits(email);
+
+      const sixDigitsUserId = combineEncryptedValues(
+        encryptedTimestamp,
+        encryptedEmail
+      );
+
       //? Generate Rand Avatar
       const avatar = gravatar.url(
         email,
@@ -44,6 +73,7 @@ export default async function handler(
         password: hashedPassword,
         roles: "USER",
         profileImage: avatar,
+        userid: sixDigitsUserId,
       });
 
       //? Save User

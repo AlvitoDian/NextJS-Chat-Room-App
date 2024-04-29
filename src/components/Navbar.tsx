@@ -6,11 +6,13 @@ import Avatar from "@/components/Avatar";
 
 export default function Navbar() {
   const { data: session } = useSession() as any;
-  const handleLogout = async () => {
-    await signOut();
-  };
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   const handleDropdownOpen = () => {
     setDropdownOpen(true);
@@ -20,8 +22,12 @@ export default function Navbar() {
     setDropdownOpen(false);
   };
 
+  const handleLogout = async () => {
+    await signOut();
+  };
+
   return (
-    <nav className="bg-white border-gray-200 sticky top-0 z-[999]">
+    <nav className="bg-white border-[#e6defc] border-b-[1px] sticky top-0 z-[999]">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link
           href="/"
@@ -32,32 +38,160 @@ export default function Navbar() {
             Nimbrunk
           </span>
         </Link>
+        {/* Mobile Menu */}
         <button
-          data-collapse-toggle="navbar-default"
           type="button"
           className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400"
-          aria-controls="navbar-default"
-          aria-expanded="false"
+          onClick={toggleMobileMenu}
         >
-          <span className="sr-only">Open main menu</span>
-          <svg
+          <div className="flex item-center flex-col justify-center relative">
+            <span
+              className={`${
+                isMobileMenuOpen ? "w-0" : ""
+              } origin-top-left transition-all duration-100 w-5 h-0.5 bg-gray-500 `}
+            ></span>
+
+            <span
+              className={`${
+                isMobileMenuOpen ? "rotate-45" : ""
+              } origin-center transition-all duration-300 w-5 h-0.5 bg-gray-500 mt-[5px] -mb-[7px] `}
+            ></span>
+            <span
+              className={`${
+                isMobileMenuOpen ? "-rotate-45" : ""
+              } origin-center transition-all duration-300 w-5 h-0.5 bg-gray-500 mt-[5px] `}
+            ></span>
+
+            <span
+              className={`${
+                isMobileMenuOpen ? "w-0" : ""
+              } origin-bottom-left transition-all duration-100 w-5 h-0.5 bg-gray-500 mt-[5px]`}
+            ></span>
+          </div>
+          {/*    <svg
             className="w-5 h-5"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
             fill="none"
-            viewBox="0 0 17 14"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M1 1h15M1 7h15M1 13h15"
-            />
+            {isMobileMenuOpen ? (
+              <>
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </>
+            ) : (
+              <>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </>
+            )}
+          </svg> */}
+
+          {/* : (
+          <svg
+            className="w-5 h-5 transition-all duration-500"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
+          ) */}
         </button>
+        {isMobileMenuOpen && (
+          <div className="w-full md:hidden absolute top-11 left-0 ">
+            <ul
+              className="bg-white font-medium text-sm flex flex-col p-4 mt-4 ul-mobile-menu text-gray-600"
+              style={{ height: isMobileMenuOpen ? "100%" : "0" }}
+            >
+              <li>
+                <Link
+                  href="/"
+                  className="block py-2 px-3 rounded md:bg-transparent md:p-0"
+                  aria-current="page"
+                >
+                  Home
+                </Link>
+              </li>
+              {session ? (
+                <>
+                  <li>
+                    <Link
+                      href="/direct-message"
+                      className="block py-2 px-3 rounded md:bg-transparent md:p-0"
+                      aria-current="page"
+                    >
+                      Direct Message
+                    </Link>
+                  </li>
+                  {session.user.roles.includes("ADMIN") && (
+                    <li>
+                      <Link
+                        href="/admin"
+                        className="block py-2 px-3 rounded md:bg-transparent md:p-0"
+                      >
+                        Admin Page
+                      </Link>
+                    </li>
+                  )}
+                  <li>
+                    <Link
+                      href={`/user/edit/${session.user.id}`}
+                      className="block py-2 px-3 rounded md:bg-transparent md:p-0"
+                    >
+                      Atur Profil
+                    </Link>
+                  </li>
+                  <li>
+                    <a
+                      onClick={handleLogout}
+                      className="block py-2 px-3 rounded md:bg-transparent md:p-0 cursor-pointer"
+                    >
+                      Sign out
+                    </a>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link
+                      href="/auth/register"
+                      className="block py-2 px-3 rounded md:bg-transparent md:p-0"
+                      aria-current="page"
+                    >
+                      Daftar
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/auth/login"
+                      className="block py-2 px-3 rounded md:bg-transparent md:p-0"
+                      aria-current="page"
+                    >
+                      Masuk
+                    </Link>
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
+        )}
+        {/* Mobile Menu End */}
         <div className="hidden w-full lg:flex md:w-auto" id="navbar-default">
-          <ul className="bg-white font-medium flex items-center  p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 text-gray-600 font-[600]">
+          <ul className="bg-white font-medium flex items-center p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 text-gray-600 font-[600]">
             <li>
               <Link
                 href="/"

@@ -4,7 +4,7 @@ import Link from "next/link";
 function Hero() {
   return (
     <div className="bg-white text-white h-[93vh] flex justify-center items-center">
-      <div className=" px-10 grid grid-cols-1 xxl:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 items-center">
+      <div className="md:px-10 grid grid-cols-1 xxl:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 items-center">
         {/* Grid bagian kiri */}
         <div className="text-left px-10">
           <h1 className="xl:text-7xl text-4xl font-bold text-[#6F3EFC]">

@@ -6,7 +6,6 @@ import Avatar from "@/components/Avatar";
 
 export default function Navbar() {
   const { data: session } = useSession() as any;
-  console.log(session, "session");
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -24,7 +23,7 @@ export default function Navbar() {
   };
 
   const handleLogout = async () => {
-    await signOut();
+    await signOut({ callbackUrl: "/" });
   };
 
   return (

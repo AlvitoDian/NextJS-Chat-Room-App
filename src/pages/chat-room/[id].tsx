@@ -23,6 +23,7 @@ export default function ChatRoom() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [socketConnected, setSocketConnected] = useState(false);
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
   //? Fetch room details on page load
   useEffect(() => {
@@ -64,13 +65,6 @@ export default function ChatRoom() {
   }, [socketConnected]);
 
   //? Connect Socket io
-  /*   const connectSocketio = async () => {
-    await fetch("/api/socket");
-
-    socket.on("receive-message", (data) => {
-      setMessages((pre) => [...pre, data]);
-    });
-  }; */
   const connectSocketio = async () => {
     await fetch("/api/socket");
 
@@ -184,20 +178,53 @@ export default function ChatRoom() {
               <div className="py-2 flex flex-col text-white">
                 <div className="font-bold text-lg">{room.name}</div>
                 <div className="font-sm text-sm">
-                  {participants.length > 7
-                    ? participants.slice(0, 7).map((participant, index) => (
-                        <span key={index}>
-                          {participant}
-                          {index !== 6 && ", "}
-                        </span>
-                      ))
-                    : participants.map((participant, index) => (
-                        <span key={index}>
-                          {participant}
-                          {index !== participants.length - 1 && ", "}
-                        </span>
-                      ))}
-                  {participants.length > 7 && <span>...</span>}
+                  {isMobile ? (
+                    <>
+                      {participants.length > 3 ? (
+                        <>
+                          {participants
+                            .slice(0, 3)
+                            .map((participant, index) => (
+                              <span key={index}>
+                                {participant}
+                                {index !== 2 && ", "}
+                              </span>
+                            ))}
+                          <span>...</span>
+                        </>
+                      ) : (
+                        participants.map((participant, index) => (
+                          <span key={index}>
+                            {participant}
+                            {index !== participants.length - 1 && ", "}
+                          </span>
+                        ))
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {participants.length > 7 ? (
+                        <>
+                          {participants
+                            .slice(0, 7)
+                            .map((participant, index) => (
+                              <span key={index}>
+                                {participant}
+                                {index !== 6 && ", "}
+                              </span>
+                            ))}
+                          <span>...</span>
+                        </>
+                      ) : (
+                        participants.map((participant, index) => (
+                          <span key={index}>
+                            {participant}
+                            {index !== participants.length - 1 && ", "}
+                          </span>
+                        ))
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             </div>

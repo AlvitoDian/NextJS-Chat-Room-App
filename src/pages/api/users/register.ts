@@ -34,6 +34,10 @@ export default async function handler(
       const reqBody = req.body;
       const { username, email, password } = reqBody;
 
+      if (!password) {
+        return res.status(400).json({ message: "Password is required" });
+      }
+
       //? Check Email or Username
       const user = await User.findOne({ $or: [{ email }, { username }] });
 

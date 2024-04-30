@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import { useSession } from "next-auth/react";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
+import DiscordSignInButton from "@/components/DiscordSignInButton";
 
 export default function Login() {
   const router = useRouter();
@@ -31,6 +33,7 @@ export default function Login() {
     }));
   };
 
+  //? Credential Provider
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (!user.email || !user.password) {
@@ -85,7 +88,7 @@ export default function Login() {
               value={user.email}
               onChange={handleChange}
               className="bg-gray-100 rounded-md relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              placeholder="Email address"
+              placeholder="Alamat Email"
             />
           </div>
           <div>
@@ -136,9 +139,17 @@ export default function Login() {
                   <span className="sr-only">Loading...</span>
                 </div>
               ) : (
-                "Sign in"
+                "Masuk"
               )}
             </button>
+          </div>
+          {/* Signin With Google & Github */}
+          <div className="flex justify-center">
+            <span className="text-sm">atau</span>
+          </div>
+          <div className="flex gap-[10px]">
+            <GoogleSignInButton />
+            <DiscordSignInButton />
           </div>
         </form>
       </div>

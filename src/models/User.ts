@@ -20,7 +20,6 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: [true, "Must provide a password"],
     },
     profileImage: {
       type: String,

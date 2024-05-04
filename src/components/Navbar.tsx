@@ -33,7 +33,7 @@ export default function Navbar() {
           href="/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
-          <Image src="/logo.png" alt="Flowbite Logo" width={30} height={30} />
+          <Image src="/logo.png" alt="Nimbrunk Logo" width={30} height={30} />
           <span className="self-center text-2xl font-bold whitespace-nowrap text-[#6F3EFC]">
             Nimbrunk
           </span>
@@ -41,14 +41,14 @@ export default function Navbar() {
         {/* Mobile Menu */}
         <button
           type="button"
-          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400"
+          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden"
           onClick={toggleMobileMenu}
         >
           <div className="flex item-center flex-col justify-center relative">
             <span
               className={`${
-                isMobileMenuOpen ? "w-0" : ""
-              } origin-top-left transition-all duration-100 w-5 h-0.5 bg-gray-500 `}
+                isMobileMenuOpen ? "h-0 -translate-y-[5px]" : "h-0.5"
+              } origin-top-left transition-all duration-100 w-5 bg-gray-500 `}
             ></span>
 
             <span
@@ -64,8 +64,8 @@ export default function Navbar() {
 
             <span
               className={`${
-                isMobileMenuOpen ? "w-0" : ""
-              } origin-bottom-left transition-all duration-100 w-5 h-0.5 bg-gray-500 mt-[5px]`}
+                isMobileMenuOpen ? "h-0 translate-y-[5px]" : "h-0.5"
+              } origin-bottom-left transition-all duration-100 w-5 bg-gray-500 mt-[5px]`}
             ></span>
           </div>
         </button>

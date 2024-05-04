@@ -39,14 +39,11 @@ export default function BubbleChat({
 
   const handleOpenUserProfile = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:3000/api/users/detailUser/${userId}`,
-        {
-          headers: {
-            "Cache-Control": "no-store",
-          },
-        }
-      );
+      const res = await axios.get(`/api/users/detailUser/${userId}`, {
+        headers: {
+          "Cache-Control": "no-store",
+        },
+      });
       openModalUser(true);
       setProfileUser(res.data);
     } catch (error) {

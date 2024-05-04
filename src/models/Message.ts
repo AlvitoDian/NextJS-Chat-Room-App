@@ -5,6 +5,9 @@ const Schema = mongoose.Schema;
 const messageSchema = new Schema(
   {
     text: { type: String, required: true },
+    fileUrl: {
+      type: String,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

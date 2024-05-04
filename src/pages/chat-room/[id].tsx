@@ -168,7 +168,7 @@ export default function ChatRoom() {
 
         <div className="flex justify-center">
           {/* Chat Field */}
-          <div className="max-w-xl w-full rounded-lg shadow-lg h-[735px] relative">
+          <div className="max-w-xl w-full rounded-lg shadow-lg h-[80vh] relative">
             <div className="flex bg-[#906bfa] rounded-t-lg drop-shadow-lg z-[99]">
               {/* Grup Icon */}
               <div className="flex justify-center items-center px-4">
@@ -230,7 +230,7 @@ export default function ChatRoom() {
             </div>
             <div className="flex flex-col px-5 ">
               <div
-                className="flex flex-col -ml-5 px-5 w-70 h-[615px] absolute bottom-4 mb-10 overflow-auto w-full custom-scrollbar"
+                className="flex flex-col -ml-5 px-5 w-70 absolute bottom-[15px] top-[64px] mb-10 overflow-auto w-full custom-scrollbar"
                 id="style-3"
                 style={{
                   backgroundImage: `url('/pattern.png')`,

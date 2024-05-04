@@ -243,9 +243,9 @@ export default function DirectMessage() {
         {/* Desktop View */}
         <div className="sm:hidden lg:flex justify-center">
           {/* Contact Field */}
-          <div className="max-w-md w-full shadow-lg h-[735px] relative">
+          <div className="max-w-md w-full shadow-lg h-[80vh] relative">
+            {/* Search */}
             <div className="flex items-center bg-[#906bfa] rounded-t-lg drop-shadow-lg z-[99] h-[64px]">
-              {/* Search */}
               <form className="w-full px-5">
                 <label
                   htmlFor="default-search"
@@ -281,26 +281,24 @@ export default function DirectMessage() {
                 </div>
               </form>
             </div>
+            {/* Contact */}
             <div className="flex flex-col ">
               <div
-                className="flex flex-col h-[670px] absolute bottom-0 overflow-auto w-full custom-scrollbar"
+                className="flex flex-col h-[80vh] absolute top-[65px] overflow-auto w-full custom-scrollbar"
                 id="style-3"
               >
                 {receiver.map((message, index) => {
-                  // Menentukan apakah pengguna saat ini adalah sender atau receiver
                   const isCurrentUserSender =
                     message.sender._id.toString() === session.user.id;
                   const isCurrentUserReceiver =
                     message.receiver._id.toString() === session.user.id;
 
-                  // Menentukan apakah data harus ditampilkan
                   const shouldDisplayData =
                     (isCurrentUserSender || isCurrentUserReceiver) &&
                     (isCurrentUserSender
                       ? message.receiver._id.toString() !== session.user.id
                       : message.sender._id.toString() !== session.user.id);
 
-                  // Jika data harus ditampilkan, lakukan iterasi dan tampilkan
                   if (shouldDisplayData) {
                     return (
                       <div
@@ -346,7 +344,7 @@ export default function DirectMessage() {
           </div>
           {/* Chat Field */}
           {currentMessages || receiverUser ? (
-            <div className="max-w-xl w-full rounded-lg shadow-lg h-[735px] relative">
+            <div className="max-w-xl w-full rounded-lg shadow-lg h-[80vh] relative">
               <div className="flex bg-[#906bfa] rounded-t-lg drop-shadow-lg z-[99]">
                 {/* Grup Icon */}
                 {receiverUser &&
@@ -368,7 +366,7 @@ export default function DirectMessage() {
 
               <div className="flex flex-col px-5 ">
                 <div
-                  className="flex flex-col -ml-5 px-5 w-70 h-[615px] absolute bottom-4 mb-10 overflow-auto w-full custom-scrollbar"
+                  className="flex flex-col -ml-5 px-5 w-70 absolute top-[64px] bottom-[15px] mb-10 overflow-auto w-full custom-scrollbar"
                   id="style-3"
                   style={{
                     backgroundImage: `url('/pattern.png')`,
@@ -454,7 +452,6 @@ export default function DirectMessage() {
                         )}
                         {/* Field Chat */}
                         <div className="flex items-center">
-                          {" "}
                           {/*  Button Image */}
                           <label
                             htmlFor="image-upload"
@@ -547,7 +544,7 @@ export default function DirectMessage() {
               </div>
             </div>
           ) : (
-            <div className="max-w-xl w-full rounded-lg shadow-lg h-[735px] flex flex-col justify-center items-center">
+            <div className="max-w-xl w-full rounded-lg shadow-lg h-[80vh] flex flex-col justify-center items-center">
               <span className="self-center text-2xl font-bold whitespace-nowrap text-[#6F3EFC]">
                 Nimbrunk
               </span>
@@ -568,7 +565,7 @@ export default function DirectMessage() {
             className={
               isChatOpen
                 ? "hidden"
-                : "max-w-md w-full shadow-lg h-[735px] relative"
+                : "max-w-md w-full shadow-lg h-[80vh] relative"
             }
           >
             <div className="flex items-center bg-[#906bfa] rounded-t-lg drop-shadow-lg z-[99] h-[64px]">
@@ -610,24 +607,21 @@ export default function DirectMessage() {
             </div>
             <div className="flex flex-col ">
               <div
-                className="flex flex-col h-[670px] absolute bottom-0 overflow-auto w-full custom-scrollbar"
+                className="flex flex-col h-[80vh] absolute top-[65px] overflow-auto w-full custom-scrollbar"
                 id="style-3"
               >
                 {receiver.map((message, index) => {
-                  // Menentukan apakah pengguna saat ini adalah sender atau receiver
                   const isCurrentUserSender =
                     message.sender._id.toString() === session.user.id;
                   const isCurrentUserReceiver =
                     message.receiver._id.toString() === session.user.id;
 
-                  // Menentukan apakah data harus ditampilkan
                   const shouldDisplayData =
                     (isCurrentUserSender || isCurrentUserReceiver) &&
                     (isCurrentUserSender
                       ? message.receiver._id.toString() !== session.user.id
                       : message.sender._id.toString() !== session.user.id);
 
-                  // Jika data harus ditampilkan, lakukan iterasi dan tampilkan
                   if (shouldDisplayData) {
                     return (
                       <div
@@ -677,7 +671,7 @@ export default function DirectMessage() {
             <div
               className={
                 isChatOpen
-                  ? "max-w-xl w-full rounded-lg shadow-lg h-[735px] relative"
+                  ? "max-w-xl w-full rounded-lg shadow-lg h-[80vh] relative"
                   : "hidden"
               }
             >
@@ -708,7 +702,7 @@ export default function DirectMessage() {
 
               <div className="flex flex-col px-5 ">
                 <div
-                  className="flex flex-col -ml-5 px-5 w-70 h-[615px] absolute bottom-4 mb-10 overflow-auto w-full custom-scrollbar"
+                  className="flex flex-col -ml-5 px-5 w-70 top-[64px] absolute bottom-[15px] mb-10 overflow-auto w-full custom-scrollbar"
                   id="style-3"
                   style={{
                     backgroundImage: `url('/pattern.png')`,
@@ -757,71 +751,122 @@ export default function DirectMessage() {
                       e.preventDefault();
                       sendMessage();
                     }}
+                    encType="multipart/form-data"
                   >
-                    <div className="flex items-center px-3 py-2 rounded-b-lg bg-[#906BFA]">
-                      {/*  Button Image */}
-                      <label
-                        htmlFor="image-upload"
-                        className="inline-flex justify-center px-2 text-gray-500 rounded-lg cursor-pointer mr-3"
-                      >
-                        <svg
-                          className="w-5 h-5"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 18"
-                        >
-                          <path
-                            fill="white"
-                            d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
-                          />
-                          <path
-                            stroke="white"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M18 1H2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
-                          />
-                          <path
-                            stroke="white"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
-                          />
-                        </svg>
-                        <span className="sr-only">Upload image</span>
-                      </label>
-                      <input
-                        type="file"
-                        id="image-upload"
-                        className="hidden"
-                        accept="image/*"
-                      />
+                    <input
+                      type="file"
+                      id="image-upload"
+                      accept=".png, .jpg, .jpeg"
+                      name="fileImage"
+                      onChange={handleImageChange}
+                      style={{ display: "none" }}
+                    />
+                    <div className=" px-3 py-2 rounded-b-lg bg-[#906BFA]">
+                      <div className="flex-col">
+                        {/* If Image Inputed */}
+                        {previewImage && (
+                          <div className="flex">
+                            <div className="relative">
+                              <div className="absolute top-2 rounded-full right-2 bg-white w-3 h-3"></div>
+                              <div
+                                className="absolute top-0 right-1 text-lg rounded-full cursor-pointer text-red-500"
+                                onClick={() => {
+                                  removeImageFromChat();
+                                }}
+                              >
+                                <FontAwesomeIcon icon={faCircleXmark} />
+                              </div>
+                              <Image
+                                className="w-[150px] m-3 rounded-md shadow-lg"
+                                src={previewImage}
+                                alt="file"
+                                width={10}
+                                height={10}
+                              />
+                            </div>
+                          </div>
+                        )}
+                        {/* Field Chat */}
+                        <div className="flex items-center">
+                          {/*  Button Image */}
+                          <label
+                            htmlFor="image-upload"
+                            className="inline-flex justify-center px-2 text-gray-500 rounded-lg cursor-pointer mr-3"
+                          >
+                            <svg
+                              className="w-5 h-5"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 20 18"
+                            >
+                              <path
+                                fill="white"
+                                d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
+                              />
+                              <path
+                                stroke="white"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M18 1H2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
+                              />
+                              <path
+                                stroke="white"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M13 5.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0ZM7.565 7.423 4.5 14h11.518l-2.516-3.71L11 13 7.565 7.423Z"
+                              />
+                            </svg>
+                            <span className="sr-only">Upload image</span>
+                          </label>
 
-                      {/*  Button Image End */}
-                      <textarea
-                        id="chat"
-                        rows={1}
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg shadow"
-                        placeholder="Ketik pesan..."
-                      />
-                      <button
-                        type="submit"
-                        className="inline-flex justify-center ml-2 p-2 text-blue-600 rounded-full cursor-pointer "
-                      >
-                        <svg
-                          className="w-5 h-5 rotate-90 rtl:-rotate-90 text-[#906BFA]"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="white"
-                          viewBox="0 0 18 20"
-                        >
-                          <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
-                        </svg>
-                      </button>
+                          <textarea
+                            id="chat"
+                            rows={1}
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg shadow"
+                            placeholder="Ketik pesan..."
+                          />
+                          {isLoading ? (
+                            <div role="status" className="ml-2">
+                              <svg
+                                aria-hidden="true"
+                                className="w-5 h-5 text-gray-200 animate-spin dark:text-gray-600 fill-white"
+                                viewBox="0 0 100 101"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                  fill="currentColor"
+                                />
+                                <path
+                                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                  fill="currentFill"
+                                />
+                              </svg>
+                            </div>
+                          ) : (
+                            <button
+                              type="submit"
+                              className="inline-flex justify-center ml-2 p-2 text-blue-600 rounded-full cursor-pointer "
+                            >
+                              <svg
+                                className="w-5 h-5 rotate-90 rtl:-rotate-90 text-[#906BFA]"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="white"
+                                viewBox="0 0 18 20"
+                              >
+                                <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
+                              </svg>
+                            </button>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </form>
                 </div>

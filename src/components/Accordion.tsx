@@ -37,9 +37,9 @@ export default function Accordion({ title, content }) {
           isOpen ? "is-open border-t border-[#d7cafc] rounded-b-md" : ""
         }`}
       >
-        <p className="inner">
-          <div className="px-4 py-2 text-sm text-gray-500">{content}</div>
-        </p>
+        <div className="inner">
+          <p className="px-4 py-2 text-sm text-gray-500">{content}</p>
+        </div>
       </div>
     </div>
   );

@@ -1,17 +1,3 @@
-// export { default } from "next-auth/middleware";
-// import { getSession } from "next-auth/react";
-// import { NextResponse } from "next/server";
-// import type { NextRequest } from "next/server";
-
-// export async function middleware(req: NextRequest) {}
-
-// /* export const config = {
-//   matcher: ["/", "/add", "/profile", "/update/:path*"],
-// }; */
-// export const config = {
-//   matcher: ["/admin*", "/admin"],
-// };
-
 import { NextRequestWithAuth, withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 

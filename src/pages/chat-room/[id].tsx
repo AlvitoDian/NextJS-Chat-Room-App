@@ -9,6 +9,7 @@ import Head from "next/head";
 import io from "socket.io-client";
 import UserProfileModal from "@/components/UserProfileModal";
 import SkeletonGroupChat from "@/components/Skeleton/SkeletonGroupChat";
+import UserOnlineList from "@/components/UserOnlineList";
 
 export default function ChatRoom() {
   let socket = io();
@@ -40,10 +41,10 @@ export default function ChatRoom() {
 
         if (data.success) {
           setRoom(data.room);
-          const participantsUsernames = data.room.participants.map(
-            (participant) => participant.username
+          const participantsFilter = data.room.participants.map(
+            (participant) => participant
           );
-          setParticipants(participantsUsernames);
+          setParticipants(participantsFilter);
         } else {
           console.error("Error fetching rooms:", data.error);
         }
@@ -147,7 +148,7 @@ export default function ChatRoom() {
     setProfileUserModal(user);
   };
 
-  console.log(profileUserModal.user);
+  console.log(room);
 
   return (
     <>
@@ -166,7 +167,9 @@ export default function ChatRoom() {
           />
         ) : null}
 
-        <div className="flex justify-center">
+        <div className="grid sm:grid-cols-1 lg:grid-cols-3">
+          <div className=""></div>
+          {/*    <div className="flex justify-center"> */}
           {/* Chat Field */}
           <div className="max-w-xl w-full rounded-lg shadow-lg h-[80vh] relative">
             <div className="flex bg-[#906bfa] rounded-t-lg drop-shadow-lg z-[99]">
@@ -186,7 +189,7 @@ export default function ChatRoom() {
                             .slice(0, 3)
                             .map((participant, index) => (
                               <span key={index}>
-                                {participant}
+                                {participant.username}
                                 {index !== 2 && ", "}
                               </span>
                             ))}
@@ -195,7 +198,7 @@ export default function ChatRoom() {
                       ) : (
                         participants.map((participant, index) => (
                           <span key={index}>
-                            {participant}
+                            {participant.username}
                             {index !== participants.length - 1 && ", "}
                           </span>
                         ))
@@ -209,7 +212,7 @@ export default function ChatRoom() {
                             .slice(0, 7)
                             .map((participant, index) => (
                               <span key={index}>
-                                {participant}
+                                {participant.username}
                                 {index !== 6 && ", "}
                               </span>
                             ))}
@@ -218,7 +221,7 @@ export default function ChatRoom() {
                       ) : (
                         participants.map((participant, index) => (
                           <span key={index}>
-                            {participant}
+                            {participant.username}
                             {index !== participants.length - 1 && ", "}
                           </span>
                         ))
@@ -331,6 +334,9 @@ export default function ChatRoom() {
               </div>
               {/* Field Typing End */}
             </div>
+          </div>
+          <div className="">
+            {<UserOnlineList participants={participants} />}
           </div>
         </div>
       </div>

@@ -47,7 +47,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Home</title>
+        <title>Home - Nimbrunk</title>
       </Head>
       <Hero />
       <div className="lg:px-[160px] sm:px-[40px] py-10">

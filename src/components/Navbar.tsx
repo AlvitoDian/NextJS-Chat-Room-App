@@ -70,7 +70,7 @@ export default function Navbar() {
           </div>
         </button>
         {isMobileMenuOpen && (
-          <div className="w-full md:hidden absolute top-11 left-0 ">
+          <div className="w-full md:hidden absolute top-11 left-0 border-[#e6defc] border-b-[1px]">
             <ul
               className="bg-white font-medium text-sm flex flex-col p-4 mt-4 ul-mobile-menu text-gray-600"
               style={{ height: isMobileMenuOpen ? "100%" : "0" }}
@@ -149,7 +149,7 @@ export default function Navbar() {
         )}
         {/* Mobile Menu End */}
         <div className="hidden w-full lg:flex md:w-auto" id="navbar-default">
-          <ul className="bg-white font-medium flex items-center p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 text-gray-600 font-[600]">
+          <ul className="bg-white font-medium flex items-center p-4 md:p-0 mt-4 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 text-gray-600 font-[600] ">
             <li>
               <Link
                 href="/"

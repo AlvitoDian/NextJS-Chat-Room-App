@@ -104,6 +104,7 @@ export default function DirectMessage() {
     const fetchData = async () => {
       if (receiverUser && receiver.length > 0) {
         await handleReceiverClick(receiverUser.user._id);
+        setIsChatOpen(true);
       } else {
         console.log("No message found.");
       }
@@ -188,7 +189,6 @@ export default function DirectMessage() {
       setIsLoading(false);
       if (data.success) {
         let sendSocket = data.savedMessage;
-        console.log("send socket", sendSocket);
         socket.emit("send-message", {
           sendSocket,
         });
@@ -203,7 +203,6 @@ export default function DirectMessage() {
         if (!isContactNew) {
           setIsNewMember(true);
           setReceiver((prevReceiver) => [...prevReceiver, sendSocket]);
-          console.log(receiverUser.user.username, "is new member");
         } else {
           console.log("Receiver sudah ada");
         }

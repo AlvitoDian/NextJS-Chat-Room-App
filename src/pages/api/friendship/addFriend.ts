@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import User from "@/models/User";
-import Friendship from "@/models/FriendShip";
+import Friendship from "@/models/Friendship";
 import { connectDB } from "@/utils/connectDB";
 
 export default async function handler(
@@ -12,21 +12,14 @@ export default async function handler(
       await connectDB();
 
       const { userReq, userAdd } = req.body;
-      console.log(userReq, userAdd);
 
-      /*    const message = new Message({ text, user: userId, room: roomId });
+      const addFriend = new Friendship({ user1: userReq, user2: userAdd });
 
-      const savedMessage = await message.save();
+      const savedFriend = await addFriend.save();
 
-      const userFind = await User.findById(userId).select("-password -roles");
-
-      savedMessage.user = userFind;
-
-      return res.status(200).json({
-        message: "Message sent successfully",
+      return res.status(201).json({
         success: true,
-        savedMessage,
-      }); */
+      });
     } catch (error) {
       console.error("Error sending message", error);
       return res.status(500).json({ error: "Internal Server Error" });

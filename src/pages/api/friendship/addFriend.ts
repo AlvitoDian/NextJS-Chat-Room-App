@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import Message from "@/models/FriendShip";
 import User from "@/models/User";
+import Friendship from "@/models/FriendShip";
 import { connectDB } from "@/utils/connectDB";
 
 export default async function handler(

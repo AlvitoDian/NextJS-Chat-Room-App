@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const friendShipSchema = new Schema(
+const friendshipSchema = new Schema(
   {
     user1: {
       type: mongoose.Schema.Types.ObjectId,
@@ -21,7 +21,7 @@ const friendShipSchema = new Schema(
   }
 );
 
-const FriendShip =
-  mongoose.models.FriendShip || mongoose.model("FriendShip", friendShipSchema);
+const Friendship =
+  mongoose.models.Friendship || mongoose.model("Friendship", friendshipSchema);
 
-export default FriendShip;
+export default Friendship;

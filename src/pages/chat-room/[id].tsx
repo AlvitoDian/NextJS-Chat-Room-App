@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import BubbleChat from "@/components/BubbleChat";
 import Avatar from "@/components/Avatar";
 import { useSession } from "next-auth/react";
@@ -147,8 +146,6 @@ export default function ChatRoom() {
   const setProfileUser = (user) => {
     setProfileUserModal(user);
   };
-
-  console.log(room);
 
   return (
     <>
@@ -336,7 +333,12 @@ export default function ChatRoom() {
             </div>
           </div>
           <div className="">
-            {<UserOnlineList participants={participants} />}
+            {
+              <UserOnlineList
+                participants={participants}
+                currentUser={session.user}
+              />
+            }
           </div>
         </div>
       </div>

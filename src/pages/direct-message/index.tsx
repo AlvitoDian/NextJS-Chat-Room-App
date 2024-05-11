@@ -244,7 +244,7 @@ export default function DirectMessage() {
           {/* Contact Field */}
           <div className="max-w-md w-full shadow-lg h-[80vh] relative">
             {/* Search */}
-            <div className="flex items-center bg-[#906bfa] rounded-t-lg drop-shadow-lg z-[99] h-[64px]">
+            <div className="flex items-center bg-[#906bfa] rounded-tl-lg drop-shadow-lg z-[99] h-[64px]">
               <form className="w-full px-5">
                 <label
                   htmlFor="default-search"
@@ -344,7 +344,7 @@ export default function DirectMessage() {
           {/* Chat Field */}
           {currentMessages || receiverUser ? (
             <div className="max-w-xl w-full rounded-lg shadow-lg h-[80vh] relative">
-              <div className="flex bg-[#906bfa] rounded-t-lg drop-shadow-lg z-[99]">
+              <div className="flex bg-[#906bfa] rounded-tr-lg drop-shadow-lg z-[99]">
                 {/* Grup Icon */}
                 {receiverUser &&
                   receiverUser.user &&
@@ -424,7 +424,7 @@ export default function DirectMessage() {
                       onChange={handleImageChange}
                       style={{ display: "none" }}
                     />
-                    <div className=" px-3 py-2 rounded-b-lg bg-[#906BFA]">
+                    <div className=" px-3 py-2 rounded-br-lg bg-[#906BFA]">
                       <div className="flex-col">
                         {/* If Image Inputed */}
                         {previewImage && (

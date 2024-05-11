@@ -1,6 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMessage, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMessage,
+  faUserPlus,
+  faFlag,
+} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useReceiver } from "@/contexts/ReceiverContext";
@@ -105,6 +109,15 @@ export default function UserProfileModal({
             <FontAwesomeIcon className="text-[20px]" icon={faUserPlus} />
             <span className="text-[11px] pt-2 font-medium text-gray-500">
               Add Friend
+            </span>
+          </Link>
+          <Link
+            href={"#"}
+            className="pt-2 text-[#ff2626] hover:text-[#ed4040] flex flex-col justify-center items-center"
+          >
+            <FontAwesomeIcon className="text-[20px]" icon={faFlag} />
+            <span className="text-[11px] pt-2 font-medium text-gray-500">
+              Report
             </span>
           </Link>
         </div>

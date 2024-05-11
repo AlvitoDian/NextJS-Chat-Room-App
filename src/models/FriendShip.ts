@@ -4,16 +4,17 @@ const Schema = mongoose.Schema;
 
 const friendShipSchema = new Schema(
   {
-    sender: {
+    user1: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    receiver: {
+    user2: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
+    status: { type: String, enum: ["pending", "accepted"], default: "pending" },
   },
   {
     timestamps: true,

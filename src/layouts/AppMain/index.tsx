@@ -19,7 +19,7 @@ export default function AppMain(props: AppMainProps) {
     <>
       <Navbar />
       {children}
-      <FriendList />
+      {session && <FriendList currentUser={session.user} />}
       <Footer />
     </>
   );

@@ -1,67 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage, faGear } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import { useReceiver } from "@/contexts/ReceiverContext";
+import { useRouter } from "next/router";
 
-export default function FriendList() {
+export default function FriendList({ currentUser }) {
+  const router = useRouter();
+  const { allReceiver, receiverUser, fetchReceiverUser, fetchConversation } =
+    useReceiver();
+
+  console.log(allReceiver);
+
   const [isOpen, setIsOpen] = useState(false);
+  const [friendLists, setFriendLists] = useState([]);
+  const [filteredFriendLists, setFilteredFriendLists] = useState([]);
+
+  useEffect(() => {
+    fetchFriendLists(currentUser.id);
+  }, [currentUser.id]);
+
+  const fetchFriendLists = async (id: any) => {
+    try {
+      const response = await axios.get(`/api/friendship/getFriendLists/${id}`);
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch user");
+      }
+      const friendData = response.data.friends;
+      setFriendLists(friendData);
+
+      const filteredFriends = friendData
+        .map((friend) => {
+          if (friend.user1._id !== currentUser.id) {
+            return friend.user1;
+          } else if (friend.user2._id !== currentUser.id) {
+            return friend.user2;
+          } else {
+            return null;
+          }
+        })
+        .filter((user) => user !== null);
+
+      setFilteredFriendLists(filteredFriends);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
+
+  const handleDirectMessageClick = async (userId) => {
+    try {
+      await fetchReceiverUser(userId);
+      await fetchConversation(userId, allReceiver, currentUser.id);
+      router.push("/direct-message");
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
   };
-
-  const friends = [
-    { name: "Ani" },
-    { name: "Budi" },
-    { name: "Citra" },
-    { name: "Dewi" },
-    { name: "Eko" },
-    { name: "Fani" },
-    { name: "Gita" },
-    { name: "Hadi" },
-    { name: "Indra" },
-    { name: "Joko" },
-    { name: "Kartika" },
-    { name: "Lina" },
-    { name: "Mira" },
-    { name: "Nana" },
-    { name: "Oscar" },
-    { name: "Putri" },
-    { name: "Qori" },
-    { name: "Rina" },
-    { name: "Sari" },
-    { name: "Tono" },
-    { name: "Umar" },
-    { name: "Vina" },
-    { name: "Wati" },
-    { name: "Yuni" },
-    { name: "Zara" },
-    { name: "Adi" },
-    { name: "Bambang" },
-    { name: "Cindy" },
-    { name: "Dedi" },
-    { name: "Eva" },
-    { name: "Fajar" },
-    { name: "Gina" },
-    { name: "Hanif" },
-    { name: "Ira" },
-    { name: "Jaka" },
-    { name: "Kiki" },
-    { name: "Laras" },
-    { name: "Maman" },
-    { name: "Nadia" },
-    { name: "Olive" },
-    { name: "Prita" },
-    { name: "Qonita" },
-    { name: "Robby" },
-    { name: "Santi" },
-    { name: "Tita" },
-    { name: "Uci" },
-    { name: "Vino" },
-    { name: "Wira" },
-    { name: "Yani" },
-    { name: "Zacky" },
-  ];
 
   return (
     <div className="bg-[#906BFA] rounded-t-md flex flex-col fixed bottom-0 right-10 w-[270px] z-10 shadow">
@@ -78,33 +77,44 @@ export default function FriendList() {
             id="style-3"
           >
             {/* Loop Here */}
-            {friends.map((friend, index) => (
+            {friendLists.map((friend, index) => (
               <div key={index} className="border-[#e6defc] border-b-[1px]">
                 <div className="flex justify-between">
                   <div className="flex items-center">
                     <div className="pl-3">
                       <Image
                         className="w-6 h-6 rounded-full"
-                        src="https://www.w3schools.com/howto/img_avatar.png"
+                        src={
+                          currentUser.id !== friend.user1._id
+                            ? friend.user1.profileImage
+                            : friend.user2.profileImage
+                        }
                         alt="Rounded avatar"
                         width={100}
                         height={100}
                       />
                     </div>
                     <p className="px-4 py-2 text-sm text-gray-500">
-                      {friend.name}
+                      {currentUser.id !== friend.user1._id
+                        ? friend.user1.username
+                        : friend.user2.username}
                     </p>
                   </div>
                   <div className="flex gap-[13px] items-center px-3">
                     <FontAwesomeIcon
                       className="text-[16px] cursor-pointer text-[#906BFA] hover:text-[#6d4acf]"
                       icon={faMessage}
-                      /*  onClick={() => handleDirectMessageClick(participant._id)} */
+                      onClick={() =>
+                        handleDirectMessageClick(
+                          currentUser.id !== friend.user1._id
+                            ? friend.user1._id
+                            : friend.user2._id
+                        )
+                      }
                     />
                     <FontAwesomeIcon
                       className="text-[16px] cursor-pointer text-gray-500 hover:text-gray-900"
                       icon={faGear}
-                      /* onClick={() => handleAddFriend(participant._id)} */
                     />
                   </div>
                 </div>

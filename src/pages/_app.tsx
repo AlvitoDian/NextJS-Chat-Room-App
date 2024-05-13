@@ -10,11 +10,11 @@ export default function App({
 }: AppProps) {
   return (
     <SessionProvider session={session}>
-      <AppMain>
-        <ReceiverProvider>
+      <ReceiverProvider>
+        <AppMain>
           <Component {...pageProps} />
-        </ReceiverProvider>
-      </AppMain>
+        </AppMain>
+      </ReceiverProvider>
     </SessionProvider>
   );
 }

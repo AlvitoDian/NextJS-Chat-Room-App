@@ -44,6 +44,7 @@ export default function UserProfileModal({
       console.error("Error fetching user:", error);
     }
   };
+
   function getYearFromStringTimestamp(timestampString) {
     const date = new Date(timestampString);
     return date.getFullYear();

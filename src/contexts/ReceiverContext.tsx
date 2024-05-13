@@ -6,10 +6,12 @@ import React, {
   ReactNode,
 } from "react";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 interface ReceiverContextType {
   receiverUser: any;
   conversation: any;
+  allReceiver: any;
   fetchReceiverUser: (userId: any) => void;
   fetchConversation: (userId: any, receiver: any, sessionUserId: any) => void;
 }
@@ -23,6 +25,27 @@ export const ReceiverProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [receiverUser, setReceiverUser] = useState<any>("");
   const [conversation, setConversation] = useState<any>("");
+  const [allReceiver, setAllReceiver] = useState<any>([]);
+
+  const { data: session } = useSession() as any;
+
+  useEffect(() => {
+    const fetchAllReceivers = async () => {
+      try {
+        const response = await axios.get(
+          `/api/directMessage/getAll/${session.user.id}`
+        );
+        if (response.status !== 200) {
+          throw new Error("Failed to fetch users");
+        }
+        const allReceiverData = response.data.messages;
+        setAllReceiver(allReceiverData);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetchAllReceivers();
+  }, []);
 
   //? Fetch Contact
   const fetchReceiverUser = async (id: any) => {
@@ -66,6 +89,7 @@ export const ReceiverProvider: React.FC<{ children: ReactNode }> = ({
         conversation,
         fetchReceiverUser,
         fetchConversation,
+        allReceiver,
       }}
     >
       {children}

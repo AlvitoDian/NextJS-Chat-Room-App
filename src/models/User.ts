@@ -21,6 +21,9 @@ const userSchema = new Schema(
     password: {
       type: String,
     },
+    bannerImage: {
+      type: String,
+    },
     profileImage: {
       type: String,
     },

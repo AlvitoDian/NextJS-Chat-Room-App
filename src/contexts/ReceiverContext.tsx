@@ -30,22 +30,24 @@ export const ReceiverProvider: React.FC<{ children: ReactNode }> = ({
   const { data: session } = useSession() as any;
 
   useEffect(() => {
-    const fetchAllReceivers = async () => {
-      try {
-        const response = await axios.get(
-          `/api/directMessage/getAll/${session.user.id}`
-        );
-        if (response.status !== 200) {
-          throw new Error("Failed to fetch users");
+    if (session && session.user) {
+      const fetchAllReceivers = async () => {
+        try {
+          const response = await axios.get(
+            `/api/directMessage/getAll/${session.user.id}`
+          );
+          if (response.status !== 200) {
+            throw new Error("Failed to fetch users");
+          }
+          const allReceiverData = response.data.messages;
+          setAllReceiver(allReceiverData);
+        } catch (error) {
+          console.error("Error fetching users:", error);
         }
-        const allReceiverData = response.data.messages;
-        setAllReceiver(allReceiverData);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-    fetchAllReceivers();
-  }, []);
+      };
+      fetchAllReceivers();
+    }
+  }, [session]);
 
   //? Fetch Contact
   const fetchReceiverUser = async (id: any) => {

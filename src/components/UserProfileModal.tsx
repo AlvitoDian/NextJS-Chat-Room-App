@@ -17,6 +17,7 @@ export default function UserProfileModal({
   profileImage,
   userId,
   userSince,
+  bannerImage,
 }) {
   const modalRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -57,8 +58,9 @@ export default function UserProfileModal({
         <div
           className="absolute top-0 w-full h-[100px] bg-cover rounded-t-lg z-1"
           style={{
-            backgroundImage:
-              "url('https://www.w3schools.com/css/img_chania.jpg')",
+            backgroundImage: `url(${
+              bannerImage ? bannerImage : "/default-banner.jpg"
+            })`,
           }}
         ></div>
         {/* Content User Profile */}

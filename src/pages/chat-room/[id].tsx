@@ -147,6 +147,13 @@ export default function ChatRoom() {
     setProfileUserModal(user);
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+  };
+
   return (
     <>
       <Head>
@@ -159,6 +166,7 @@ export default function ChatRoom() {
             username={profileUserModal.user.username}
             email={profileUserModal.user.email}
             profileImage={profileUserModal.user.profileImage}
+            bannerImage={profileUserModal.user.bannerImage}
             userId={profileUserModal.user._id}
             userSince={profileUserModal.user.createdAt}
           />
@@ -309,6 +317,7 @@ export default function ChatRoom() {
                       rows={1}
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
+                      onKeyDown={handleKeyPress}
                       className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg shadow"
                       placeholder="Ketik pesan..."
                     />

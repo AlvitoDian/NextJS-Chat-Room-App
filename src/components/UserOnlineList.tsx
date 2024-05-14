@@ -70,6 +70,7 @@ export default function UserOnlineList({ participants, currentUser }) {
           username={profileUserModal.user.username}
           email={profileUserModal.user.email}
           profileImage={profileUserModal.user.profileImage}
+          bannerImage={profileUserModal.user.bannerImage}
           userId={profileUserModal.user._id}
           userSince={profileUserModal.user.createdAt}
         />

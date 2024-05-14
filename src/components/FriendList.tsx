@@ -4,27 +4,26 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage, faGear } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useReceiver } from "@/contexts/ReceiverContext";
-/* import { useFriendLists } from "@/contexts/FriendListsContext"; */
+import { useFriendLists } from "@/contexts/FriendListsContext";
 import { useRouter } from "next/router";
 
 export default function FriendList({ currentUser }) {
   const router = useRouter();
   const { allReceiver, receiverUser, fetchReceiverUser, fetchConversation } =
     useReceiver();
-  /*   const {
+  const {
     friendLists,
     setFriendLists,
     filteredFriendLists,
     setFilteredFriendLists,
   } = useFriendLists();
- */
+
   const [isOpen, setIsOpen] = useState(false);
-  const [friendLists, setFriendLists] = useState([]);
+  /*   const [friendLists, setFriendLists] = useState([]);
   const [filteredFriendLists, setFilteredFriendLists] = useState([]);
 
   useEffect(() => {
     fetchFriendLists(currentUser.id);
-    console.log("fetched");
   }, [currentUser.id]);
 
   const fetchFriendLists = async (id: any) => {
@@ -52,7 +51,7 @@ export default function FriendList({ currentUser }) {
     } catch (error) {
       console.error("Error fetching user:", error);
     }
-  };
+  }; */
 
   const handleDirectMessageClick = async (userId) => {
     try {

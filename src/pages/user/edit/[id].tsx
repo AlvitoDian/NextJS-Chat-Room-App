@@ -4,6 +4,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 const getUserById = async (id) => {
   try {
@@ -21,10 +22,18 @@ const getUserById = async (id) => {
 };
 
 export default function EditUser() {
+  //? Info User
   const [newUsername, setNewUsername] = useState("");
   const [newEmail, setNewEmail] = useState("");
+
+  //? Profile Image
   const [profileImage, setProfileImage] = useState("");
   const [previewImage, setPreviewImage] = useState("");
+
+  //? Banner Image
+  const [bannerImage, setBannerImage] = useState("");
+  const [previewBannerImage, setPreviewBannerImage] = useState("");
+
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,6 +49,7 @@ export default function EditUser() {
         setNewUsername(userData.user.username);
         setNewEmail(userData.user.email);
         setProfileImage(userData.user.profileImage);
+        setBannerImage(userData.user.bannerImage);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -50,6 +60,7 @@ export default function EditUser() {
     }
   }, [id]);
 
+  //? Handle Profile Image
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
 
@@ -69,6 +80,26 @@ export default function EditUser() {
     }
   };
 
+  //? Handle Banner Image
+  const handleBannerImageChange = (e: any) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      setBannerImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewBannerImage(reader.result as string);
+      };
+      reader.onerror = () => {
+        setError("Failed to read the file.");
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setError("Please select a file.");
+      setPreviewBannerImage("");
+    }
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -76,6 +107,7 @@ export default function EditUser() {
     formData.append("username", newUsername);
     formData.append("email", newEmail);
     formData.append("profileImage", profileImage);
+    formData.append("bannerImage", bannerImage);
 
     try {
       setIsLoading(true);
@@ -97,14 +129,13 @@ export default function EditUser() {
             profileImage: data.user.profileImage,
           },
         };
-        console.log("ss edited", updatedSession);
         update(updatedSession);
       } else {
         const errorMessage = response.data.message;
         console.log("Update failed", errorMessage);
       }
     } catch (error: any) {
-      setError(error.response.data.message);
+      setError(error.message);
       setIsLoading(false);
       console.log("Update failed", error.message);
     }
@@ -112,32 +143,72 @@ export default function EditUser() {
 
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[#e1daf7]">
-      <div className="max-w-4xl w-full space-y-8 bg-white shadow-lg p-10 rounded-lg ">
-        <div>
+      <div className="max-w-4xl w-full space-y-8 bg-white shadow-lg p-10 rounded-lg relative">
+        {/* Banner Profile */}
+        <label htmlFor="bannerImage" className="cursor-pointer">
+          <div className="absolute top-0 left-0 w-full h-[100px] rounded-t-lg overflow-hidden hover:opacity-80 transition-opacity duration-500">
+            {previewBannerImage && (
+              <Image
+                src={previewBannerImage}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                style={{ objectFit: "cover" }}
+                alt="Background"
+                priority
+              />
+            )}
+            {!previewBannerImage && (
+              <Image
+                src={bannerImage ? bannerImage : "/default-banner.jpg"}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                style={{ objectFit: "cover" }}
+                alt="Background"
+                priority
+              />
+            )}
+
+            <div className="absolute top-0 left-0 w-full h-full hover:opacity-80 transition-opacity duration-500 flex items-center justify-center shadow">
+              <FontAwesomeIcon icon={faEdit} size="xl" className="text-white" />
+            </div>
+          </div>
+        </label>
+        {/* Banner Profile End */}
+        {/*      <div>
           <h2 className="mt-6 text-center text-2xl font-bold text-gray-900">
             Edit Profil
           </h2>
-        </div>
+        </div> */}
         <div className="grid md:grid-cols-2 sm:grid-cols-1">
           {/* Photo Profile */}
           <div className="flex items-center justify-center">
             <label
               htmlFor="profileImage"
-              className="cursor-pointer transition duration-300 ease-in-out relative items-center flex justify-center"
+              className="cursor-pointer transition duration-300 ease-in-out relative items-center flex justify-center hover:opacity-80 transition-all duration-500"
             >
               {previewImage && (
-                <img
-                  className="w-32 h-32 mb-3 rounded-full shadow-lg opacity-60 hover:opacity-90 transition duration-300 ease-in-out"
-                  src={previewImage}
-                  alt="Profile preview"
-                />
+                <div className="w-32 h-32 mb-3 rounded-full shadow-lg transition duration-300 ease-in-out border border-white border-[5px] relative">
+                  <Image
+                    src={previewImage}
+                    alt="Profile preview"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    style={{ objectFit: "cover" }}
+                    className="rounded-full"
+                  />
+                </div>
               )}
               {!previewImage && (
-                <img
-                  className="w-32 h-32 mb-3 rounded-full shadow-lg opacity-60 hover:opacity-90 transition duration-300 ease-in-out"
-                  src={profileImage}
-                  alt="Profile image"
-                />
+                <div className="w-32 h-32 mb-3 rounded-full shadow-lg transition duration-300 ease-in-out border border-white border-[5px] relative">
+                  <Image
+                    src={profileImage}
+                    alt="Profile image"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    style={{ objectFit: "cover" }}
+                    className="rounded-full"
+                  />
+                </div>
               )}
               <div className="absolute">
                 <FontAwesomeIcon
@@ -163,6 +234,14 @@ export default function EditUser() {
                 accept=".png, .jpg, .jpeg"
                 name="profileImage"
                 onChange={handleImageChange}
+                style={{ display: "none" }}
+              />
+              <input
+                type="file"
+                id="bannerImage"
+                accept=".png, .jpg, .jpeg"
+                name="bannerImage"
+                onChange={handleBannerImageChange}
                 style={{ display: "none" }}
               />
               <div>

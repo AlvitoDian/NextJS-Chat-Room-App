@@ -28,36 +28,38 @@ export const FriendListsProvider: React.FC<{ children: ReactNode }> = ({
   const { data: session } = useSession() as any;
 
   useEffect(() => {
-    const fetchFriendLists = async () => {
-      try {
-        const response = await axios.get(
-          `/api/friendship/getFriendLists/${session.user.id}`
-        );
-        if (response.status !== 200) {
-          throw new Error("Failed to fetch user");
+    if (session && session.user) {
+      const fetchFriendLists = async () => {
+        try {
+          const response = await axios.get(
+            `/api/friendship/getFriendLists/${session.user.id}`
+          );
+          if (response.status !== 200) {
+            throw new Error("Failed to fetch user");
+          }
+          const friendData = response.data.friends;
+          setFriendLists(friendData);
+
+          const filteredFriends = friendData
+            .map((friend) => {
+              if (friend.user1._id !== session.user.id) {
+                return friend.user1;
+              } else if (friend.user2._id !== session.user.id) {
+                return friend.user2;
+              } else {
+                return null;
+              }
+            })
+            .filter((user) => user !== null);
+
+          setFilteredFriendLists(filteredFriends);
+        } catch (error) {
+          console.error("Error fetching user:", error);
         }
-        const friendData = response.data.friends;
-        setFriendLists(friendData);
-
-        const filteredFriends = friendData
-          .map((friend) => {
-            if (friend.user1._id !== session.user.id) {
-              return friend.user1;
-            } else if (friend.user2._id !== session.user.id) {
-              return friend.user2;
-            } else {
-              return null;
-            }
-          })
-          .filter((user) => user !== null);
-
-        setFilteredFriendLists(filteredFriends);
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      }
-    };
-    fetchFriendLists();
-  }, []);
+      };
+      fetchFriendLists();
+    }
+  }, [session]);
 
   return (
     <FriendListsContext.Provider

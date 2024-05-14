@@ -10,15 +10,17 @@ export default function SocketHandler(req, res) {
   res.socket.server.io = io;
 
   io.on("connection", (socket) => {
+    //? Socket On Grup Chat
     socket.on("joinRoom", (roomName) => {
       socket.join(roomName);
     });
 
+    //? Socket On Direct Message
     socket.on("joinDirectMessage", (roomName) => {
-      console.log("user joined message", roomName);
       socket.join(roomName);
     });
 
+    //? Emit to Users in a Room and Direct Message
     socket.on("send-message", (data) => {
       if (data.sendSocket.room) {
         io.to(data.sendSocket.room).emit("receive-message", data.sendSocket);

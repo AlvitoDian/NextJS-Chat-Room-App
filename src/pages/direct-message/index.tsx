@@ -233,6 +233,14 @@ export default function DirectMessage() {
     setFileImage("");
   };
 
+  //? Enter Key Send Message
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      sendMessage();
+    }
+  };
+
   return (
     <>
       <Head>
@@ -496,6 +504,7 @@ export default function DirectMessage() {
                             rows={1}
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
+                            onKeyDown={handleKeyPress}
                             className="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg shadow"
                             placeholder="Ketik pesan..."
                           />

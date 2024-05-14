@@ -2,8 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import User from "@/models/User";
 import { connectDB } from "@/utils/connectDB";
 import { IncomingForm } from "formidable";
-import fs from "fs";
-import path from "path";
 import { uploadImage } from "@/utils/cloudinary/uploadHelper";
 
 export const config = {
@@ -33,12 +31,53 @@ export default async function handler(
         }
 
         const profileImage = files?.profileImage?.[0];
+        const bannerImage = files?.bannerImage?.[0];
         const { username, email } = fields;
 
-        if (profileImage) {
+        if (profileImage && bannerImage) {
+          updateProfileAndBannerImages();
+        } else if (profileImage) {
           updateProfileImage();
+        } else if (bannerImage) {
+          updateBannerImage();
         } else {
           updateUsernameOrEmail();
+        }
+
+        async function updateProfileAndBannerImages() {
+          try {
+            if (!existingUser) {
+              return res.status(400).json({ error: "User Not Found" });
+            }
+
+            //? Profile Image Update
+            const profileImageUrl = await uploadImage(
+              profileImage.filepath,
+              "userProfile"
+            );
+
+            existingUser.profileImage = profileImageUrl;
+
+            //? Banner Image Update
+            const bannerImageUrl = await uploadImage(
+              bannerImage.filepath,
+              "userProfile"
+            );
+
+            existingUser.bannerImage = bannerImageUrl;
+
+            await existingUser.save();
+
+            updateUsernameOrEmail();
+            return res.status(200).json({
+              message: "Profile and banner images updated successfully",
+            });
+          } catch (updateError) {
+            console.error("Error updating user images:", updateError);
+            return res
+              .status(500)
+              .json({ error: "Error updating user images" });
+          }
         }
 
         async function updateProfileImage() {
@@ -53,6 +92,29 @@ export default async function handler(
             );
 
             existingUser.profileImage = profileImageUrl;
+            await existingUser.save();
+
+            updateUsernameOrEmail();
+          } catch (updateError) {
+            console.error("Error updating user profile image:", updateError);
+            return res
+              .status(500)
+              .json({ error: "Error updating user profile image" });
+          }
+        }
+
+        async function updateBannerImage() {
+          try {
+            if (!existingUser) {
+              return res.status(400).json({ error: "User Not Found" });
+            }
+
+            const bannerImageUrl = await uploadImage(
+              bannerImage.filepath,
+              "userProfile"
+            );
+
+            existingUser.bannerImage = bannerImageUrl;
             await existingUser.save();
 
             updateUsernameOrEmail();

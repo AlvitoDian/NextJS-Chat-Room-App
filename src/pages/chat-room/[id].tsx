@@ -211,14 +211,14 @@ export default function ChatRoom() {
                     </>
                   ) : (
                     <>
-                      {participants.length > 7 ? (
+                      {participants.length > 5 ? (
                         <>
                           {participants
-                            .slice(0, 7)
+                            .slice(0, 5)
                             .map((participant, index) => (
                               <span key={index}>
                                 {participant.username}
-                                {index !== 6 && ", "}
+                                {index !== 4 && ", "}
                               </span>
                             ))}
                           <span>...</span>

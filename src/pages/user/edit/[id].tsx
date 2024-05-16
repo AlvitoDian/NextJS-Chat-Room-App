@@ -179,7 +179,7 @@ export default function EditUser() {
             Edit Profil
           </h2>
         </div> */}
-        <div className="grid md:grid-cols-2 sm:grid-cols-1">
+        <div className="grid md:grid-cols-2 sm:grid-cols-1 pt-[30px]">
           {/* Photo Profile */}
           <div className="flex items-center justify-center">
             <label

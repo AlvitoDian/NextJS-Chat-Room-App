@@ -53,16 +53,22 @@ export default function UserProfileModal({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div ref={modalRef} className="bg-white rounded-lg w-96 relative">
+      <div
+        ref={modalRef}
+        className="bg-white rounded-lg w-96 relative shadow-xl"
+      >
         {/* BG User Profile */}
-        <div
-          className="absolute top-0 w-full h-[100px] bg-cover rounded-t-lg z-1"
-          style={{
-            backgroundImage: `url(${
-              bannerImage ? bannerImage : "/default-banner.jpg"
-            })`,
-          }}
-        ></div>
+        <div className="absolute top-0 left-0 w-full h-[100px] rounded-t-lg overflow-hidden">
+          <Image
+            src={bannerImage ? bannerImage : "/default-banner.jpg"}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            style={{ objectFit: "cover" }}
+            alt="Background"
+            priority
+          />
+        </div>
+
         {/* Content User Profile */}
         <div className="p-4">
           <button

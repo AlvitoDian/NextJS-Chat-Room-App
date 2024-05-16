@@ -69,9 +69,6 @@ export default async function handler(
             await existingUser.save();
 
             updateUsernameOrEmail();
-            return res.status(200).json({
-              message: "Profile and banner images updated successfully",
-            });
           } catch (updateError) {
             console.error("Error updating user images:", updateError);
             return res

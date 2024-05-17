@@ -31,7 +31,7 @@ export default function FaQ() {
   ];
 
   return (
-    <div className="flex flex-col my-[80px]">
+    <div className="flex flex-col my-[80px]" id="faq">
       <div className="text-center text-3xl text-gray-700 font-bold">FaQ</div>
       <div className=" py-10 flex flex-col gap-[12px]">
         {faqs.map((faq, index) => (

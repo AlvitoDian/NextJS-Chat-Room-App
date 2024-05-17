@@ -119,7 +119,6 @@ export default function EditUser() {
       if (response.status >= 200 && response.status < 300) {
         setIsLoading(false);
         const data = response.data;
-        console.log(data);
 
         const updatedSession = {
           ...session,

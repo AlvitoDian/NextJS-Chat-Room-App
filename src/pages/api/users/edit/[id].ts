@@ -3,12 +3,20 @@ import User from "@/models/User";
 import { connectDB } from "@/utils/connectDB";
 import { IncomingForm } from "formidable";
 import { uploadImage } from "@/utils/cloudinary/uploadHelper";
+import { deleteImage } from "@/utils/cloudinary/deleteHelper";
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
+
+function getPublicIdFromUrl(imageUrl, folderName) {
+  const urlSegments = imageUrl.split("/");
+  const publicIdWithExtension = urlSegments[urlSegments.length - 1];
+  const publicId = publicIdWithExtension.split(".")[0];
+  return `${folderName}/${publicId}`;
+}
 
 export default async function handler(
   req: NextApiRequest,
@@ -51,6 +59,20 @@ export default async function handler(
             }
 
             //? Profile Image Update
+            if (existingUser.profileImage) {
+              const isCloudinaryImage =
+                existingUser.profileImage.includes("res.cloudinary.com");
+
+              if (isCloudinaryImage) {
+                const publicId = getPublicIdFromUrl(
+                  existingUser.profileImage,
+                  "userProfile"
+                );
+
+                await deleteImage(publicId);
+              }
+            }
+
             const profileImageUrl = await uploadImage(
               profileImage.filepath,
               "userProfile"
@@ -59,6 +81,20 @@ export default async function handler(
             existingUser.profileImage = profileImageUrl;
 
             //? Banner Image Update
+            if (existingUser.bannerImage) {
+              const isCloudinaryImage =
+                existingUser.bannerImage.includes("res.cloudinary.com");
+
+              if (isCloudinaryImage) {
+                const publicId = getPublicIdFromUrl(
+                  existingUser.bannerImage,
+                  "userProfile"
+                );
+
+                await deleteImage(publicId);
+              }
+            }
+
             const bannerImageUrl = await uploadImage(
               bannerImage.filepath,
               "userProfile"
@@ -83,11 +119,28 @@ export default async function handler(
               return res.status(400).json({ error: "User Not Found" });
             }
 
+            //? Delete Old Image From Cloudinary
+            if (existingUser.profileImage) {
+              const isCloudinaryImage =
+                existingUser.profileImage.includes("res.cloudinary.com");
+
+              if (isCloudinaryImage) {
+                const publicId = getPublicIdFromUrl(
+                  existingUser.profileImage,
+                  "userProfile"
+                );
+
+                await deleteImage(publicId);
+              }
+            }
+
+            //? Upload or Update Image to Cloudinary
             const profileImageUrl = await uploadImage(
               profileImage.filepath,
               "userProfile"
             );
 
+            //? Save
             existingUser.profileImage = profileImageUrl;
             await existingUser.save();
 
@@ -106,11 +159,28 @@ export default async function handler(
               return res.status(400).json({ error: "User Not Found" });
             }
 
+            //? Delete Old Image From Cloudinary
+            if (existingUser.bannerImage) {
+              const isCloudinaryImage =
+                existingUser.bannerImage.includes("res.cloudinary.com");
+
+              if (isCloudinaryImage) {
+                const publicId = getPublicIdFromUrl(
+                  existingUser.bannerImage,
+                  "userProfile"
+                );
+
+                await deleteImage(publicId);
+              }
+            }
+
+            //? Upload or Update Image to Cloudinary
             const bannerImageUrl = await uploadImage(
               bannerImage.filepath,
               "userProfile"
             );
 
+            //? Save
             existingUser.bannerImage = bannerImageUrl;
             await existingUser.save();
 

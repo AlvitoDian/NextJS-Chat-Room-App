@@ -1,5 +1,8 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
+import Avatar from "./Avatar";
+import DummyChatFloating from "./DummyChatFloating";
 
 function Hero() {
   return (
@@ -27,8 +30,45 @@ function Hero() {
           </div>
         </div>
         {/* Grid bagian kanan */}
-        <div className="flex justify-center">
-          <img src="/hero_3d.png" alt="Your Image" className="h-64 md:h-auto" />
+        <div className="flex justify-center relative">
+          <Image
+            src="/hero_3d.png"
+            alt="Your Image"
+            className="h-64 md:h-auto"
+            width={1000}
+            height={1000}
+          />
+
+          <div className="absolute left-[100px] top-20">
+            <DummyChatFloating
+              imgProfile={
+                "https://res.cloudinary.com/dgfcvu9ns/image/upload/v1715691836/userProfile/imj6kw3iia9mom8ahtry.png"
+              }
+              name={"Heru Bengkel"}
+              chat={"Hari ini kesini ga bro ?"}
+              isLeft={false}
+            />
+          </div>
+          <div className="absolute left-[200px] top-40">
+            <DummyChatFloating
+              imgProfile={
+                "https://res.cloudinary.com/dgfcvu9ns/image/upload/v1714317635/userProfile/u7b3zwdzqhqjeczjsxx8.png"
+              }
+              name={"Anda"}
+              chat={"Abisni gw kesana"}
+              isLeft={true}
+            />
+          </div>
+          <div className="absolute left-[100px] top-60">
+            <DummyChatFloating
+              imgProfile={
+                "https://res.cloudinary.com/dgfcvu9ns/image/upload/v1715691836/userProfile/imj6kw3iia9mom8ahtry.png"
+              }
+              name={"Heru Bengkel"}
+              chat={"Shapss"}
+              isLeft={false}
+            />
+          </div>
         </div>
       </div>
     </div>

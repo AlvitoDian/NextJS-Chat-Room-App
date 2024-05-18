@@ -43,7 +43,7 @@ function Feature() {
 
   return (
     <div className="bg-white text-white flex justify-center items-center">
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-5">
+      <div className="grid md:grid-cols-3 grid-cols-1 gap-5">
         {features.map((feature, index) => (
           <FeatureCard
             key={index}

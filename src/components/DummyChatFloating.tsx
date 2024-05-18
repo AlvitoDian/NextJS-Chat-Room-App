@@ -15,7 +15,7 @@ export default function DummyChatFloating({ imgProfile, name, chat, isLeft }) {
         <p className="text-sm font-medium text-gray-900 flex justify-end">
           {name}
         </p>
-        <p className="text-sm font-normal text-gray-400">{chat}</p>
+        <p className="text-sm font-normal text-gray-500">{chat}</p>
       </div>
 
       <div className="pr-2">
@@ -36,7 +36,7 @@ export default function DummyChatFloating({ imgProfile, name, chat, isLeft }) {
       </div>
       <div className="flex flex-col pr-2">
         <p className="text-sm font-medium text-gray-900">{name}</p>
-        <p className="text-sm font-normal text-gray-400">{chat}</p>
+        <p className="text-sm font-normal text-gray-500">{chat}</p>
       </div>
     </div>
   );

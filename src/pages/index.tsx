@@ -52,10 +52,13 @@ export default function Home() {
       <Hero />
       <div className="lg:px-[160px] sm:px-[40px] py-10">
         {/* Feature Section */}
+        <h2 className="text-center py-10 mt-10 font-bold text-2xl text-gray-700">
+          Apa aja sih Fitur Nimbrunk ?
+        </h2>
         <Feature />
         {/* Grup Chat Section */}
-        <h2 className="text-center py-10 font-bold text-2xl text-gray-700">
-          Segera gabung obrolan
+        <h2 className="text-center py-10 mt-10 font-bold text-2xl text-gray-700">
+          Silihkan pilih untuk bergabung ke grup
         </h2>
         {/*  <div className="flex gap-[12px] justify-center flex-wrap"> */}
         <div className="grid sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-2 justify-center">

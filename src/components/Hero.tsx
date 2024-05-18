@@ -34,10 +34,17 @@ function Hero() {
   )}`;
 
   return (
-    <div className="bg-white text-white h-[93vh] flex justify-center items-center">
+    <div className="bg-white text-white h-[93vh] flex justify-center items-center relative">
       <div className="md:px-10 grid grid-cols-1 xxl:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 items-center">
+        <div
+          className="w-[700px] h-[700px] bg-gray-700 absolute top-[-100px] left-[-400px] opacity-[30%]"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(111,62,252,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 100%)",
+          }}
+        ></div>
         {/* Grid bagian kiri */}
-        <div className="text-left px-10">
+        <div className="text-left px-10 z-10">
           <h1 className="xl:text-7xl text-4xl font-bold text-[#6F3EFC]">
             Nimbrunk
           </h1>
@@ -163,7 +170,7 @@ function Hero() {
         {/* Grid bagian kanan */}
         <div className="flex justify-center relative">
           <Image
-            src="/hero_3d2.png"
+            src="/hero_3d3.png"
             alt="Your Image"
             className="h-64 md:h-auto"
             width={1000}

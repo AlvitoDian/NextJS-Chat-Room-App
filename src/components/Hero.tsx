@@ -34,15 +34,24 @@ function Hero() {
   )}`;
 
   return (
-    <div className="bg-white text-white h-[93vh] flex justify-center items-center relative">
+    <div className="bg-white text-white h-[93vh] flex justify-center items-center relative overflow-hidden">
       <div className="md:px-10 grid grid-cols-1 xxl:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 items-center">
+        {/* Blur Shape */}
         <div
-          className="w-[700px] h-[700px] bg-gray-700 absolute top-[-100px] left-[-400px] opacity-[30%]"
+          className="w-[1000px] h-[1000px] bg-gray-700 absolute top-[-200px] left-[-600px] opacity-[30%]"
           style={{
             background:
               "radial-gradient(circle, rgba(111,62,252,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 100%)",
           }}
         ></div>
+        <div
+          className="w-[1000px] h-[1000px] bg-gray-700 absolute top-[-50px] right-[-550px] opacity-[30%]"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(111,62,252,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 100%)",
+          }}
+        ></div>
+        {/* Blur Shape End*/}
         {/* Grid bagian kiri */}
         <div className="text-left px-10 z-10">
           <h1 className="xl:text-7xl text-4xl font-bold text-[#6F3EFC]">
@@ -61,7 +70,7 @@ function Hero() {
             </Link>
             <Link
               href="#faq"
-              className=" bg-white border-[2px] border-[#6F3EFC] text-[#6F3EFC] hover:text-white font-semibold lg:px-6 lg:py-3 sm:px-3 sm:py-2 rounded rounded-full hover:bg-[#8055fa] hover:shadow-lg hover:shadow-[#9879f2] transition-all duration-700"
+              className=" bg-transparent border-[2px] border-[#6F3EFC] text-[#6F3EFC] hover:text-white font-semibold lg:px-6 lg:py-3 sm:px-3 sm:py-2 rounded rounded-full hover:bg-[#8055fa] hover:shadow-lg hover:shadow-[#9879f2] transition-all duration-700"
             >
               Selengkapnya
             </Link>
@@ -73,7 +82,7 @@ function Hero() {
               {displayedImages.map((user, index) => (
                 <div className="-ml-3" key={index}>
                   <Image
-                    className="w-8 h-8 md:w-12 md:h-12 rounded-full border-white border-[4px]"
+                    className="w-8 h-8 md:w-12 md:h-12 rounded-full border-transparent md:border-white border-[4px]"
                     src={user.profileImage}
                     alt="Rounded avatar"
                     width={100}
@@ -83,7 +92,7 @@ function Hero() {
               ))}
               {remainingCount > 0 && (
                 <Image
-                  className="w-8 h-8 md:w-12 md:h-12 rounded-full -ml-3 border-white border-[4px]"
+                  className="w-8 h-8 md:w-12 md:h-12 rounded-full -ml-3 border-transparent md:border-white border-[4px]"
                   src={imagePlaceHold}
                   alt={`Avatar ${totalUsers}`}
                   width={250}
@@ -91,7 +100,7 @@ function Hero() {
                 />
               )}
             </div>
-            <div className="flex flex-col md:ml-3 mr-3">
+            <div className="flex flex-col -ml-2 md:ml-3 mr-3">
               <div className="flex">
                 <span className="text-md text-gray-700 font-semibold">
                   {totalUsers} Orang
@@ -106,7 +115,7 @@ function Hero() {
 
             <div className="hidden md:flex h-[40px] border-l border-[1px] border-gray-300"></div>
 
-            <div className="flex flex-col md:ml-3">
+            <div className="flex flex-col -ml-2 md:ml-3">
               <div className="flex">
                 <span className="text-md text-gray-700 font-semibold">
                   4,7/5
@@ -176,8 +185,8 @@ function Hero() {
             width={1000}
             height={1000}
           />
-          <div className="w-[10px]">
-            <div className="absolute left-[100px] top-20">
+          <div>
+            <div className="absolute left-0 top-0 md:left-[100px] md:top-20 transform scale-[0.7] lg:scale-[1]">
               <DummyChatFloating
                 imgProfile={
                   "https://res.cloudinary.com/dgfcvu9ns/image/upload/v1715691836/userProfile/imj6kw3iia9mom8ahtry.png"
@@ -187,7 +196,7 @@ function Hero() {
                 isLeft={false}
               />
             </div>
-            <div className="absolute left-[200px] top-40">
+            <div className="absolute left-[60px] top-[60px] md:left-[200px] md:top-40 transform scale-[0.7] lg:scale-[1]">
               <DummyChatFloating
                 imgProfile={
                   "https://res.cloudinary.com/dgfcvu9ns/image/upload/v1714317635/userProfile/u7b3zwdzqhqjeczjsxx8.png"
@@ -197,7 +206,7 @@ function Hero() {
                 isLeft={true}
               />
             </div>
-            <div className="absolute left-[100px] top-60">
+            <div className="absolute left-0 top-[120px] md:left-[100px] md:top-60 transform scale-[0.7] lg:scale-[1]">
               <DummyChatFloating
                 imgProfile={
                   "https://res.cloudinary.com/dgfcvu9ns/image/upload/v1715691836/userProfile/imj6kw3iia9mom8ahtry.png"
@@ -207,7 +216,7 @@ function Hero() {
                 isLeft={false}
               />
             </div>
-            <div className="absolute left-[100px] top-[350px]">
+            <div className="absolute left-0 top-[180px] md:left-[100px] md:top-[350px] transform scale-[0.7] lg:scale-[1]">
               <DummyChatTypingFloating />
             </div>
           </div>

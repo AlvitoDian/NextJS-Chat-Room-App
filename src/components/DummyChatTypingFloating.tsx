@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function DummyChatTypingFloating() {
   return (
     <div
@@ -16,8 +18,8 @@ export default function DummyChatTypingFloating() {
             placeholder="Pesan..."
             required
           />
-          <button
-            type="button"
+          <Link
+            href="/chat-room/65fef4ead6ff96394cfc553b"
             className="absolute inset-y-0 end-0 flex items-center pe-3"
           >
             <svg
@@ -29,7 +31,7 @@ export default function DummyChatTypingFloating() {
             >
               <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
             </svg>
-          </button>
+          </Link>
         </div>
       </div>
     </div>

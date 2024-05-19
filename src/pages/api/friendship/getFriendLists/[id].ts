@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import User from "@/models/User";
-import Friendship from "@/models/Friendship";
+import Friend from "@/models/Friend";
 import { connectDB } from "@/utils/connectDB";
 
 export default async function handler(
@@ -15,7 +15,7 @@ export default async function handler(
 
       const userId = typeof id === "string" ? id : id.toString();
 
-      const friends = await Friendship.find({
+      const friends = await Friend.find({
         $or: [{ user1: id }, { user2: id }],
       }).populate("user1 user2");
 

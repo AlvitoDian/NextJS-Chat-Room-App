@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import Friendship from "@/models/Friendship";
+import Friend from "@/models/Friend";
 import { connectDB } from "@/utils/connectDB";
 
 export default async function handler(
@@ -12,7 +12,7 @@ export default async function handler(
 
       const { userReq, userAdd } = req.body;
 
-      const addFriend = new Friendship({ user1: userReq, user2: userAdd });
+      const addFriend = new Friend({ user1: userReq, user2: userAdd });
 
       const savedFriend = await addFriend.save();
 

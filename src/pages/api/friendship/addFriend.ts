@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import User from "@/models/User";
 import Friendship from "@/models/Friendship";
 import { connectDB } from "@/utils/connectDB";
 

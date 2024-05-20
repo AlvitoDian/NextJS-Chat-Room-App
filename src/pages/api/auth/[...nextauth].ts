@@ -122,6 +122,7 @@ export const authOptions = {
         token.username = params.session.user.username;
         token.email = params.session.user.email;
         token.profileImage = params.session.user.profileImage;
+        token.bannerImage = params.session.user.bannerImage;
       }
 
       if (user) {
@@ -130,6 +131,7 @@ export const authOptions = {
         token.id = user.id;
         token.roles = user.roles;
         token.profileImage = user.profileImage;
+        token.bannerImage = user.bannerImage;
       }
 
       return token;
@@ -141,6 +143,7 @@ export const authOptions = {
         session.user.id = token.id;
         session.user.roles = token.roles;
         session.user.profileImage = token.profileImage;
+        session.user.bannerImage = token.bannerImage;
       }
 
       return session;

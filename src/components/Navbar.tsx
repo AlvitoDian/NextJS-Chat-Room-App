@@ -3,15 +3,16 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Avatar from "@/components/Avatar";
+import Sidebar from "./Sidebar";
 
 export default function Navbar() {
   const { data: session } = useSession() as any;
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
   };
 
   const handleDropdownOpen = () => {
@@ -42,34 +43,40 @@ export default function Navbar() {
         <button
           type="button"
           className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden"
-          onClick={toggleMobileMenu}
+          onClick={toggleSidebar}
         >
           <div className="flex item-center flex-col justify-center relative">
             <span
               className={`${
-                isMobileMenuOpen ? "h-0 -translate-y-[5px]" : "h-0.5"
+                isSidebarOpen ? "h-0 -translate-y-[5px]" : "h-0.5"
               } origin-top-left transition-all duration-100 w-5 bg-gray-500 `}
             ></span>
 
             <span
               className={`${
-                isMobileMenuOpen ? "rotate-45" : ""
+                isSidebarOpen ? "rotate-45" : ""
               } origin-center transition-all duration-300 w-5 h-0.5 bg-gray-500 mt-[5px] -mb-[7px] `}
             ></span>
             <span
               className={`${
-                isMobileMenuOpen ? "-rotate-45" : ""
+                isSidebarOpen ? "-rotate-45" : ""
               } origin-center transition-all duration-300 w-5 h-0.5 bg-gray-500 mt-[5px] `}
             ></span>
 
             <span
               className={`${
-                isMobileMenuOpen ? "h-0 translate-y-[5px]" : "h-0.5"
+                isSidebarOpen ? "h-0 translate-y-[5px]" : "h-0.5"
               } origin-bottom-left transition-all duration-100 w-5 bg-gray-500 mt-[5px]`}
             ></span>
           </div>
         </button>
-        {isMobileMenuOpen && (
+        <Sidebar
+          isOpen={isSidebarOpen}
+          toggleSidebar={toggleSidebar}
+          session={session}
+          handleLogout={handleLogout}
+        />
+        {/*      {isMobileMenuOpen && (
           <div className="w-full md:hidden absolute top-11 left-0 border-[#e6defc] border-b-[1px]">
             <ul
               className="bg-white font-medium text-sm flex flex-col p-4 mt-4 ul-mobile-menu text-gray-600"
@@ -146,7 +153,7 @@ export default function Navbar() {
               )}
             </ul>
           </div>
-        )}
+        )} */}
         {/* Mobile Menu End */}
         <div className="hidden w-full lg:flex md:w-auto" id="navbar-default">
           <ul className="bg-white font-medium flex items-center p-4 md:p-0 mt-4 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 text-gray-600 font-[600] ">
@@ -168,7 +175,7 @@ export default function Navbar() {
                     className="block py-2 px-3 rounded md:bg-transparent md:p-0 "
                     aria-current="page"
                   >
-                    Direct Message
+                    Pesan Pribadi
                   </Link>
                 </li>
                 <li

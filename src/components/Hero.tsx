@@ -38,14 +38,14 @@ function Hero() {
       <div className="md:px-10 grid grid-cols-1 xxl:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 items-center">
         {/* Blur Shape */}
         <div
-          className="w-[1000px] h-[1000px] bg-gray-700 absolute top-[-200px] left-[-600px] opacity-[30%]"
+          className="-[700px] h-[700px] md:w-[1000px] md:h-[1000px] bg-gray-700 absolute top-[-200px] left-[-600px] opacity-[30%]"
           style={{
             background:
               "radial-gradient(circle, rgba(111,62,252,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 100%)",
           }}
         ></div>
         <div
-          className="w-[1000px] h-[1000px] bg-gray-700 absolute top-[-50px] right-[-550px] opacity-[30%]"
+          className="w-[700px] h-[700px] md:w-[1000px] md:h-[1000px] bg-gray-700 absolute top-[-50px] right-[-550px] opacity-[30%]"
           style={{
             background:
               "radial-gradient(circle, rgba(111,62,252,1) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 100%)",

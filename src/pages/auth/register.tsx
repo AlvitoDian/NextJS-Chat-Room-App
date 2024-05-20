@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function Register() {
   const router = useRouter();
@@ -131,7 +132,7 @@ export default function Register() {
             </div>
           )}
 
-          <div>
+          <div className="flex flex-col">
             <button
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#6F3EFC] hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-500"
@@ -161,6 +162,19 @@ export default function Register() {
                 "Daftar"
               )}
             </button>
+            <div className="flex justify-center pt-5">
+              <div className="text-sm">
+                <span className="text-gray-500 font-medium">
+                  Sudah punya akun ?
+                </span>
+                <Link
+                  href={"/auth/login"}
+                  className="pl-1 font-semibold text-[#6F3EFC]"
+                >
+                  Masuk
+                </Link>
+              </div>
+            </div>
           </div>
         </form>
       </div>

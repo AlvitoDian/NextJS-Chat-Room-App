@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
 import DiscordSignInButton from "@/components/DiscordSignInButton";
+import Link from "next/link";
 
 export default function Login() {
   const router = useRouter();
@@ -150,6 +151,19 @@ export default function Login() {
           <div className="flex gap-[10px]">
             <GoogleSignInButton />
             <DiscordSignInButton />
+          </div>
+          <div className="flex justify-center pt-5">
+            <div className="text-sm">
+              <span className="text-gray-500 font-medium">
+                Belum punya akun ?
+              </span>
+              <Link
+                href={"/auth/register"}
+                className="pl-1 font-semibold text-[#6F3EFC]"
+              >
+                Daftar
+              </Link>
+            </div>
           </div>
         </form>
       </div>

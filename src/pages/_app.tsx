@@ -4,16 +4,14 @@ import AppMain from "@/layouts/AppMain";
 import { SessionProvider } from "next-auth/react";
 import { ReceiverProvider } from "@/contexts/ReceiverContext";
 import { FriendListsProvider } from "@/contexts/FriendListsContext";
-export default function App({
-  Component,
-  pageProps: { session, pageProps },
-}: AppProps) {
+export default function App({ Component, pageProps }: AppProps) {
+  const { session, ...restPageProps } = pageProps;
   return (
     <SessionProvider session={session}>
       <ReceiverProvider>
         <FriendListsProvider>
           <AppMain>
-            <Component {...pageProps} />
+            <Component {...restPageProps} />
           </AppMain>
         </FriendListsProvider>
       </ReceiverProvider>

@@ -127,6 +127,7 @@ export default function EditUser() {
             username: data.user.username,
             email: data.user.email,
             profileImage: data.user.profileImage,
+            bannerImage: data.user.bannerImage,
           },
         };
         update(updatedSession);

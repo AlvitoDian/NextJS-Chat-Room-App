@@ -5,13 +5,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 
-export default function CardRoom({
-  name,
-  id,
-  imgProfile,
-  imgBanner,
-  participants,
-}) {
+export default function CardRoom({ name, id, imgBanner, participants }) {
   const { data: session } = useSession() as any;
 
   const profileImage = participants.map(

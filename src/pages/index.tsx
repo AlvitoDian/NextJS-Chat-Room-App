@@ -4,45 +4,28 @@ import Hero from "@/components/Hero";
 import Feature from "@/components/Feature";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Accordion from "@/components/Accordion";
 import FaQ from "@/components/FaQ";
 
-export default function Home() {
-  const [rooms, setRooms] = useState([]);
+export const getServerSideProps = async () => {
+  try {
+    const [usersResponse, roomsResponse] = await Promise.all([
+      axios.get("http://localhost:3000/api/users/getAllUser"),
+      axios.get("http://localhost:3000/api/chatRoom/getAllRoom"),
+    ]);
 
-  const [isLoading, setIsLoading] = useState(false);
+    const users = usersResponse.data;
+    const rooms = roomsResponse.data.rooms;
 
-  const images = [
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-  ];
+    return { props: { users, rooms } };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return { props: { users: [], rooms: [] } };
+  }
+};
 
-  useEffect(() => {
-    axios
-      .get("/api/chatRoom/getAllRoom")
-      .then((response) => {
-        const data = response.data;
-
-        if (data.success) {
-          setRooms(data.rooms);
-        } else {
-          console.error("Error fetching rooms:", data.error);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching rooms:", error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+export default function Home({ users, rooms }) {
+  console.log(users, "users");
+  console.log(rooms, "rooms");
 
   return (
     <>
@@ -60,17 +43,15 @@ export default function Home() {
         <h2 className="text-center py-10 mt-10 font-bold text-2xl text-gray-700">
           Silihkan pilih untuk bergabung ke grup
         </h2>
-        {/*  <div className="flex gap-[12px] justify-center flex-wrap"> */}
         <div className="grid sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-2 justify-center">
-          {isLoading ? (
-            <div>Loading...</div>
+          {rooms.length === 0 ? (
+            <div>No rooms available</div>
           ) : (
             rooms.map((room, index) => (
               <CardRoom
                 key={index}
                 name={room.name}
                 id={room._id}
-                imgProfile={images}
                 imgBanner={
                   room.bannerImage ? room.bannerImage : "/bannerchat.png"
                 }

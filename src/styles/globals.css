@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --slide-duration: 1s;
+  --slide-timing: ease-out;
+  --delay-1: 0.3s;
+  --delay-2: 0.6s;
+  --delay-3: 0.9s;
+  --delay-4: 1.2s;
+  --delay-5: 1.5s;
+}
+
 .image-card {
   background-size: cover;
   background-position: center;
@@ -98,4 +108,37 @@
 
 .floating {
   animation: floating 3s infinite;
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown var(--slide-duration) var(--slide-timing) forwards;
+}
+
+.delay-1 {
+  animation-delay: var(--delay-1);
+}
+
+.delay-2 {
+  animation-delay: var(--delay-2);
+}
+
+.delay-3 {
+  animation-delay: var(--delay-3);
+}
+
+.delay-4 {
+  animation-delay: var(--delay-4);
+}
+
+.delay-5 {
+  animation-delay: var(--delay-5);
 }

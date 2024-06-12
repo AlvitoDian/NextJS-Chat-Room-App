@@ -3,28 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import DummyChatFloating from "./DummyChatFloating";
 import DummyChatTypingFloating from "./DummyChatTypingFloating";
-import axios from "axios";
 
-function Hero() {
-  const [users, setUsers] = useState([]) as any;
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(`/api/users/getAllUser`);
-        const data = response.data;
-
-        if (data.success) {
-          setUsers(data.users);
-        } else {
-          console.error("Error fetching messages:", data.error);
-        }
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-    fetchUsers();
-  }, []);
-
+function Hero({ users }) {
   const totalUsers = users.length;
   const displayedImages = users.slice(0, 5);
   const remainingCount = totalUsers - 3;

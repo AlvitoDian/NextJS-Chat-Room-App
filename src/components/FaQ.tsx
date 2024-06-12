@@ -32,7 +32,12 @@ export default function FaQ() {
 
   return (
     <div className="flex flex-col my-[80px]" id="faq">
-      <div className="text-center text-3xl text-gray-700 font-bold">FaQ</div>
+      <div className="flex-col mt-[5px]">
+        <h2 className="text-center font-medium text-2xl text-gray-700">FAQ</h2>
+        <h2 className="text-center font-regular text-md mt-[5px] text-gray-400">
+          Pertanyaan yang sering ditanyakan
+        </h2>
+      </div>
       <div className=" py-10 flex flex-col gap-[12px]">
         {faqs.map((faq, index) => (
           <Accordion key={index} title={faq.title} content={faq.content} />

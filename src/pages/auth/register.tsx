@@ -73,7 +73,7 @@ export default function Register() {
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[#e1daf7]">
       <div className="max-w-md w-full space-y-8 bg-white shadow-lg p-10 rounded-lg">
         <div>
-          <h2 className="mt-6 text-center text-2xl font-bold text-gray-900">
+          <h2 className="mt-6 text-center text-2xl font-medium text-gray-700">
             Daftar untuk bergabung
           </h2>
         </div>

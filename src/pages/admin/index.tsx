@@ -5,18 +5,6 @@ import { useRouter } from "next/router";
 import axios from "axios";
 
 export default function Admin() {
-  const images = [
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-    "https://www.w3schools.com/howto/img_avatar.png",
-  ];
-
   const [bannerImage, setBannerImage] = useState("");
   const [previewImage, setPreviewImage] = useState("");
 
@@ -257,7 +245,6 @@ export default function Admin() {
                 key={index}
                 name={room.name}
                 id={room._id}
-                imgProfile={images}
                 imgBanner={"/bannerchat.png"}
                 participants={room.participants}
               />

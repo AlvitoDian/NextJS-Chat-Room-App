@@ -33,9 +33,11 @@ export default function FaQ() {
   return (
     <div className="flex flex-col my-[80px]" id="faq">
       <div className="flex-col mt-[5px]">
-        <h2 className="text-center font-medium text-2xl text-gray-700">FAQ</h2>
+        <h2 className="text-center font-medium text-2xl text-gray-700">
+          Pertanyaan yang sering ditanyain
+        </h2>
         <h2 className="text-center font-regular text-md mt-[5px] text-gray-400">
-          Pertanyaan yang sering ditanyakan
+          Barangkali kamu masih bingung cara make Nimbrunk
         </h2>
       </div>
       <div className=" py-10 flex flex-col gap-[12px]">

@@ -36,7 +36,7 @@ export default function Home({ users, rooms }) {
       <Highlight />
       <div className="lg:px-[160px] sm:px-[40px] py-10">
         {/* Feature Section */}
-        <div className="flex-col py-10 mt-10">
+        <div className="flex-col pb-10 mt-">
           <h2 className="text-center font-medium text-2xl text-gray-700">
             Apa aja sih Fitur Nimbrunk ?
           </h2>

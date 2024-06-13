@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faUserFriends,
+  faShieldAlt,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function Highlight() {
   const [inSection, setInSection] = useState({
@@ -39,11 +45,11 @@ export default function Highlight() {
   return (
     <section
       id="highlight-section"
-      className="bg-white h-[70vh] grid grid-cols-1 lg:grid-cols-2 sm:grid-cols-1 "
+      className="bg-white sm:h-[100vh] lg:h-[70vh] grid grid-cols-1 lg:grid-cols-2 sm:grid-cols-1 "
     >
       {/* Grid bagian kiri */}
-      <div className="" id="highlight-section">
-        <div className="relative sm:ml-[10px] md:ml-[150px] scale-50 lg:scale-100">
+      <div className="animate-float" id="highlight-section">
+        <div className="relative sm:ml-[10px] md:ml-[350px] scale-50 xl:scale-75 xxl:scale-100">
           <Image
             src={"/highlight/Group 4.png"}
             alt=""
@@ -131,18 +137,55 @@ export default function Highlight() {
       </div>
 
       {/* Grid bagian kanan */}
-      <div className="flex-col jusitfy-center z-10 lg:px-[160px] sm:px-[40px] sm:pt-[300px] md:pt-[0px]">
-        <div>
-          <span className="">Kapan lagi yekan</span>
+      <div className="flex-col justify-center z-10 lg:px-[160px] sm:px-[40px] sm:pt-[300px] md:pt-[0px]">
+        <div className="">
+          <span className="text-gray-500 text-sm font-medium tracking-[5px]">
+            Kapan Lagi yekan ?
+          </span>
+        </div>
+        <div className="my-[10px]">
+          <span className="text-gray-900 text-4xl font-medium">
+            Obrolan Seru Setiap Saat
+          </span>
         </div>
 
-        <div>
-          <span>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reiciendis
-            tempora cum ipsum illum ea fugit, placeat officiis inventore quis,
-            ad, quibusdam magnam doloribus. Pariatur, accusamus nemo doloribus
-            autem aspernatur voluptas!
+        <div className="">
+          <span className="text-gray-500 font-normal">
+            Nikmati pengalaman ngobrol tanpa batas dengan teman-teman atau
+            keluarga. Temukan kemudahan berbicara dengan fitur-fitur yang kami
+            sediakan.
           </span>
+        </div>
+
+        <div className="mt-[20px] flex items-center">
+          <div className="bg-[#ECF0FF] flex items-center justify-center w-[20px] h-[20px] p-5 text-[#6F3EFC] text-lg font-normal rounded-[10px]">
+            <FontAwesomeIcon icon={faUser} />
+          </div>
+          <div className="ml-[10px]">
+            <span className="text-gray-500">
+              Chat pribadi yang aman dan nyaman
+            </span>
+          </div>
+        </div>
+
+        <div className="mt-[20px] flex items-center">
+          <div className="bg-[#ECF0FF] flex items-center justify-center w-[20px] h-[20px] p-5 text-[#6F3EFC] text-lg font-normal rounded-[10px]">
+            <FontAwesomeIcon icon={faUserFriends} />
+          </div>
+          <div className="ml-[10px]">
+            <span className="text-gray-500">
+              Grup chat untuk berdiskusi bersama
+            </span>
+          </div>
+        </div>
+
+        <div className="mt-[20px] flex items-center">
+          <div className="bg-[#ECF0FF] flex items-center justify-center w-[20px] h-[20px] p-5 text-[#6F3EFC] text-lg font-normal rounded-[10px]">
+            <FontAwesomeIcon icon={faShieldAlt} />
+          </div>
+          <div className="ml-[10px]">
+            <span className="text-gray-500">Keamanan data yang terjamin</span>
+          </div>
         </div>
       </div>
     </section>
